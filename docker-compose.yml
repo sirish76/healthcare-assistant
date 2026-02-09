@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./healthcare-assistant-backend
+    container_name: healthassist-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ZOCDOC_API_KEY=${ZOCDOC_API_KEY:-}
+      - CORS_ALLOWED_ORIGINS=https://doctors.sirish.world,http://doctors.sirish.world
+    restart: unless-stopped
+
+  frontend:
+    build: ./healthcare-assistant-frontend
+    container_name: healthassist-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

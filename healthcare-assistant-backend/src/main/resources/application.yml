@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: healthcare-assistant
+
+# Anthropic Claude API Configuration
+anthropic:
+  api:
+    key: ${ANTHROPIC_API_KEY:your-anthropic-api-key-here}
+    url: https://api.anthropic.com/v1/messages
+    model: claude-sonnet-4-5-20250929
+    max-tokens: 4096
+
+# ZocDoc API Configuration
+zocdoc:
+  api:
+    key: ${ZOCDOC_API_KEY:your-zocdoc-api-key-here}
+    base-url: https://api.zocdoc.com/directory/v2
+
+# CORS Configuration
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,https://doctors.sirish.world,http://doctors.sirish.world}
+
+# Logging
+logging:
+  level:
+    com.healthassist: DEBUG
+    org.springframework.web: INFO
