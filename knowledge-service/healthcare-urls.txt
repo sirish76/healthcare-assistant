@@ -1,0 +1,37 @@
+# Medicare
+https://www.medicare.gov/what-medicare-covers/your-medicare-coverage-choices
+https://www.medicare.gov/basics/get-started-with-medicare
+https://www.medicare.gov/basics/get-started-with-medicare/medicare-basics/parts-of-medicare
+https://www.medicare.gov/basics/get-started-with-medicare/medicare-basics/how-does-medicare-work
+https://www.medicare.gov/basics/costs/medicare-costs
+https://www.medicare.gov/health-drug-plans/medigap
+https://www.medicare.gov/health-drug-plans/medicare-advantage-plans
+https://www.medicare.gov/drug-coverage-part-d
+
+# Healthcare.gov Glossary
+https://www.healthcare.gov/glossary/deductible/
+https://www.healthcare.gov/glossary/co-payment/
+https://www.healthcare.gov/glossary/coinsurance/
+https://www.healthcare.gov/glossary/premium/
+https://www.healthcare.gov/glossary/out-of-pocket-maximum-limit/
+https://www.healthcare.gov/glossary/health-maintenance-organization-HMO/
+https://www.healthcare.gov/glossary/preferred-provider-organization-PPO/
+https://www.healthcare.gov/glossary/pre-existing-conditions/
+https://www.healthcare.gov/glossary/essential-health-benefits/
+https://www.healthcare.gov/glossary/medicaid/
+
+# Healthcare.gov Guides
+https://www.healthcare.gov/choose-a-plan/plan-types/
+https://www.healthcare.gov/medicaid-chip/getting-medicaid-chip/
+https://www.healthcare.gov/immigrants/coverage/
+https://www.healthcare.gov/unemployed/coverage/
+https://www.healthcare.gov/self-employed/coverage/
+https://www.healthcare.gov/quick-guide/one-page-guide-to-the-marketplace/
+
+# Medicaid
+https://www.medicaid.gov/about-us/what-we-do/index.html
+https://www.medicaid.gov/medicaid/eligibility/index.html
+
+# Caregiver Resources
+https://www.caregiver.org/resource/caregiver-statistics-health-technology-and-caregiving-resources/
+https://www.nia.nih.gov/health/caregiving/caregiving-frequently-asked-questions

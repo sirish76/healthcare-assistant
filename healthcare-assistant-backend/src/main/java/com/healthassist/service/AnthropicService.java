@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +23,7 @@ public class AnthropicService {
     private static final Logger logger = Logger.getLogger(AnthropicService.class.getName());
 
     private final WebClient anthropicWebClient;
+    private final WebClient knowledgeWebClient;
     private final ObjectMapper objectMapper;
 
     @Value("${anthropic.api.key}")
@@ -32,7 +35,10 @@ public class AnthropicService {
     @Value("${anthropic.api.max-tokens}")
     private int maxTokens;
 
-    private static final String SYSTEM_PROMPT = """
+    @Value("${knowledge.service.url:http://knowledge:8081}")
+    private String knowledgeServiceUrl;
+
+    private static final String SYSTEM_PROMPT_TEMPLATE = """
             You are HealthAssist AI, a knowledgeable and empathetic healthcare insurance assistant.
             Your role is to help users understand healthcare and medical insurance topics including:
 
@@ -55,21 +61,67 @@ public class AnthropicService {
             4. Be conversational and supportive — insurance topics can be confusing and stressful.
             5. Use simple, clear language and avoid excessive jargon.
             6. If you're unsure about something, say so rather than guessing.
+            7. When using knowledge base context, naturally incorporate the information. Cite the source
+               when it adds credibility (e.g., "According to Medicare.gov...").
 
             You are NOT a substitute for professional insurance or medical advice. Always encourage users
             to contact their insurance provider, healthcare.gov, or their state Medicaid office for
             definitive answers about their specific situation.
+
+            %s
             """;
 
     public AnthropicService(@Qualifier("anthropicWebClient") WebClient anthropicWebClient,
                             ObjectMapper objectMapper) {
         this.anthropicWebClient = anthropicWebClient;
+        this.knowledgeWebClient = WebClient.builder().build();
         this.objectMapper = objectMapper;
     }
 
     public Mono<String> chat(String userMessage, List<ChatRequest.MessageHistory> conversationHistory) {
-        ObjectNode requestBody = buildRequestBody(userMessage, conversationHistory);
+        return fetchKnowledgeContext(userMessage)
+                .flatMap(context -> {
+                    ObjectNode requestBody = buildRequestBody(userMessage, conversationHistory, context);
+                    return callAnthropic(requestBody);
+                });
+    }
 
+    private Mono<String> fetchKnowledgeContext(String query) {
+        String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
+        String url = knowledgeServiceUrl + "/api/knowledge/search?q=" + encodedQuery + "&top_k=5";
+
+        return knowledgeWebClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .map(response -> {
+                    StringBuilder context = new StringBuilder();
+                    JsonNode results = response.path("results");
+                    if (results.isArray() && !results.isEmpty()) {
+                        context.append("\nRELEVANT KNOWLEDGE BASE CONTEXT:\n");
+                        context.append("Use the following information to provide accurate answers.\n\n");
+                        for (JsonNode result : results) {
+                            String text = result.path("text").asText("");
+                            String source = result.path("metadata").path("source").asText("");
+                            String title = result.path("metadata").path("title").asText("");
+                            if (!text.isEmpty()) {
+                                context.append("--- Source: ").append(title);
+                                if (!source.isEmpty()) {
+                                    context.append(" (").append(source).append(")");
+                                }
+                                context.append(" ---\n");
+                                context.append(text).append("\n\n");
+                            }
+                        }
+                    }
+                    return context.toString();
+                })
+                .doOnError(error -> logger.log(Level.WARNING,
+                        "Knowledge service unavailable: " + error.getMessage()))
+                .onErrorResume(error -> Mono.just(""));
+    }
+
+    private Mono<String> callAnthropic(ObjectNode requestBody) {
         return anthropicWebClient.post()
                 .header("x-api-key", apiKey)
                 .bodyValue(requestBody)
@@ -83,11 +135,13 @@ public class AnthropicService {
                         "or visit healthcare.gov."));
     }
 
-    private ObjectNode buildRequestBody(String userMessage, List<ChatRequest.MessageHistory> history) {
+    private ObjectNode buildRequestBody(String userMessage, List<ChatRequest.MessageHistory> history, String knowledgeContext) {
         ObjectNode body = objectMapper.createObjectNode();
         body.put("model", model);
         body.put("max_tokens", maxTokens);
-        body.put("system", SYSTEM_PROMPT);
+
+        String systemPrompt = String.format(SYSTEM_PROMPT_TEMPLATE, knowledgeContext);
+        body.put("system", systemPrompt);
 
         ArrayNode messages = objectMapper.createArrayNode();
 
