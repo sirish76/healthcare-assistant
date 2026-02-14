@@ -5,6 +5,21 @@ spring:
   application:
     name: healthcare-assistant
 
+  # PostgreSQL Database
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:healthassist}
+    username: ${DB_USERNAME:healthassist}
+    password: ${DB_PASSWORD:healthassist123}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 # Anthropic Claude API Configuration
 anthropic:
   api:
@@ -13,11 +28,21 @@ anthropic:
     model: claude-sonnet-4-5-20250929
     max-tokens: 4096
 
+# Google OAuth Configuration
+google:
+  client:
+    id: ${GOOGLE_CLIENT_ID:1045121225058-evthv0bogs2i0k5l015a04eoig1ltsnp.apps.googleusercontent.com}
+
 # ZocDoc API Configuration
 zocdoc:
   api:
     key: ${ZOCDOC_API_KEY:your-zocdoc-api-key-here}
     base-url: https://api.zocdoc.com/directory/v2
+
+# Knowledge Service
+knowledge:
+  service:
+    url: ${KNOWLEDGE_SERVICE_URL:http://knowledge:8081}
 
 # CORS Configuration
 cors:

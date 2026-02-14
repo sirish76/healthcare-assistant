@@ -10,6 +10,20 @@ const apiClient = axios.create({
   timeout: 30000,
 });
 
+// Helper to get auth headers
+const getAuthHeaders = () => {
+  const savedUser = localStorage.getItem('healthassist_user');
+  if (savedUser) {
+    try {
+      const user = JSON.parse(savedUser);
+      return { 'X-User-Id': user.id };
+    } catch (e) {
+      return {};
+    }
+  }
+  return {};
+};
+
 // Chat API
 export const sendMessage = async (message, conversationHistory = [], sessionId = null) => {
   const response = await apiClient.post('/chat', {
@@ -35,6 +49,50 @@ export const getAvailableSlots = async (doctorId) => {
 // Book appointment
 export const bookAppointment = async (appointmentData) => {
   const response = await apiClient.post('/doctors/book', appointmentData);
+  return response.data;
+};
+
+// ─── Conversation API (requires auth) ───
+
+export const getConversations = async () => {
+  const response = await apiClient.get('/conversations', {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+export const getConversation = async (conversationId) => {
+  const response = await apiClient.get(`/conversations/${conversationId}`, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+export const createConversation = async (title) => {
+  const response = await apiClient.post('/conversations', { title }, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+export const addMessageToConversation = async (conversationId, message) => {
+  const response = await apiClient.post(`/conversations/${conversationId}/messages`, message, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+export const deleteConversation = async (conversationId) => {
+  const response = await apiClient.delete(`/conversations/${conversationId}`, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+export const updateConversationTitle = async (conversationId, title) => {
+  const response = await apiClient.patch(`/conversations/${conversationId}`, { title }, {
+    headers: getAuthHeaders(),
+  });
   return response.data;
 };
 

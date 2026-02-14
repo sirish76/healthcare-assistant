@@ -1,0 +1,121 @@
+# =============================================
+# EXPANDED HEALTHCARE KNOWLEDGE BASE URLs
+# =============================================
+
+# --- Medicare.gov (Core) ---
+https://www.medicare.gov/what-medicare-covers/your-medicare-coverage-choices
+https://www.medicare.gov/basics/get-started-with-medicare
+https://www.medicare.gov/basics/get-started-with-medicare/medicare-basics/parts-of-medicare
+https://www.medicare.gov/basics/get-started-with-medicare/medicare-basics/how-does-medicare-work
+https://www.medicare.gov/basics/costs/medicare-costs
+https://www.medicare.gov/health-drug-plans/medigap
+https://www.medicare.gov/health-drug-plans/medicare-advantage-plans
+https://www.medicare.gov/drug-coverage-part-d
+
+# --- Medicare.gov (Enrollment & Eligibility) ---
+https://www.medicare.gov/basics/get-started-with-medicare/sign-up/when-does-medicare-coverage-start
+https://www.medicare.gov/basics/get-started-with-medicare/sign-up/how-do-i-sign-up-for-medicare
+https://www.medicare.gov/basics/get-started-with-medicare/medicare-basics/who-can-get-medicare
+https://www.medicare.gov/basics/get-started-with-medicare/sign-up/penalties
+https://www.medicare.gov/basics/get-started-with-medicare/sign-up/special-enrollment-periods
+
+# --- Medicare.gov (Coverage Details) ---
+https://www.medicare.gov/what-medicare-covers/what-part-a-covers
+https://www.medicare.gov/what-medicare-covers/what-part-b-covers
+https://www.medicare.gov/what-medicare-covers/is-my-test-item-or-service-covered
+https://www.medicare.gov/coverage/preventive-screening-services
+https://www.medicare.gov/coverage/mental-health-care-outpatient
+https://www.medicare.gov/coverage/hospital-care-inpatient
+https://www.medicare.gov/coverage/skilled-nursing-facility-snf-care
+https://www.medicare.gov/coverage/home-health-services
+https://www.medicare.gov/coverage/hospice-care
+https://www.medicare.gov/coverage/durable-medical-equipment-dme-coverage
+
+# --- Medicare.gov (Costs & Savings) ---
+https://www.medicare.gov/basics/costs/medicare-costs/part-a-costs
+https://www.medicare.gov/basics/costs/medicare-costs/part-b-costs
+https://www.medicare.gov/basics/costs/help/drug-costs
+https://www.medicare.gov/basics/costs/help/programs-to-help-with-costs
+https://www.medicare.gov/basics/costs/medicare-costs/avoid-fraud
+
+# --- Medicare.gov (Appeals & Rights) ---
+https://www.medicare.gov/claims-appeals/how-do-i-file-an-appeal
+https://www.medicare.gov/claims-appeals/file-a-complaint-grievance
+
+# --- Healthcare.gov (Glossary) ---
+https://www.healthcare.gov/glossary/deductible/
+https://www.healthcare.gov/glossary/co-payment/
+https://www.healthcare.gov/glossary/coinsurance/
+https://www.healthcare.gov/glossary/premium/
+https://www.healthcare.gov/glossary/out-of-pocket-maximum-limit/
+https://www.healthcare.gov/glossary/health-maintenance-organization-HMO/
+https://www.healthcare.gov/glossary/preferred-provider-organization-PPO/
+https://www.healthcare.gov/glossary/pre-existing-conditions/
+https://www.healthcare.gov/glossary/essential-health-benefits/
+https://www.healthcare.gov/glossary/medicaid/
+https://www.healthcare.gov/glossary/qualifying-life-event/
+https://www.healthcare.gov/glossary/special-enrollment-period/
+https://www.healthcare.gov/glossary/flexible-spending-account-fsa/
+https://www.healthcare.gov/glossary/health-savings-account-hsa/
+https://www.healthcare.gov/glossary/explanation-of-benefits/
+https://www.healthcare.gov/glossary/formulary/
+https://www.healthcare.gov/glossary/prior-authorization/
+https://www.healthcare.gov/glossary/network/
+https://www.healthcare.gov/glossary/claim/
+https://www.healthcare.gov/glossary/allowed-amount/
+
+# --- Healthcare.gov (Guides & Topics) ---
+https://www.healthcare.gov/choose-a-plan/plan-types/
+https://www.healthcare.gov/medicaid-chip/getting-medicaid-chip/
+https://www.healthcare.gov/immigrants/coverage/
+https://www.healthcare.gov/unemployed/coverage/
+https://www.healthcare.gov/self-employed/coverage/
+https://www.healthcare.gov/quick-guide/one-page-guide-to-the-marketplace/
+https://www.healthcare.gov/have-job-based-coverage/options/
+https://www.healthcare.gov/young-adults/children-under-26/
+https://www.healthcare.gov/coverage-outside-open-enrollment/special-enrollment-period/
+https://www.healthcare.gov/health-care-law-protections/
+https://www.healthcare.gov/preventive-care-adults/
+https://www.healthcare.gov/preventive-care-children/
+https://www.healthcare.gov/preventive-care-women/
+https://www.healthcare.gov/using-marketplace-coverage/getting-emergency-care/
+https://www.healthcare.gov/keeping-your-plan/cancelling-marketplace-plan/
+https://www.healthcare.gov/see-plans/
+https://www.healthcare.gov/lower-costs/
+https://www.healthcare.gov/lower-costs/save-on-monthly-premiums/
+https://www.healthcare.gov/lower-costs/save-on-out-of-pocket-costs/
+https://www.healthcare.gov/apply-and-enroll/get-help-applying/
+https://www.healthcare.gov/cobra-coverage/
+
+# --- Medicaid ---
+https://www.medicaid.gov/about-us/what-we-do/index.html
+https://www.medicaid.gov/medicaid/eligibility/index.html
+https://www.medicaid.gov/medicaid/benefits/index.html
+https://www.medicaid.gov/chip/index.html
+
+# --- CMS.gov ---
+https://www.cms.gov/medicare/enrollment-renewal/initial-enrollment-period
+https://www.cms.gov/medicare/enrollment-renewal/general-enrollment-period
+
+# --- NIH / Senior Health ---
+https://www.nia.nih.gov/health/caregiving/caregiving-frequently-asked-questions
+https://www.nia.nih.gov/health/aging-place/aging-place-growing-older-home
+https://www.nia.nih.gov/health/health-care/talking-your-doctor
+https://www.nia.nih.gov/health/prescription-medicines-and-over-counter-products/safe-use-medicines-older-adults
+
+# --- Caregiver Resources ---
+https://www.caregiver.org/resource/caregiver-statistics-health-technology-and-caregiving-resources/
+https://www.caregiver.org/resource/taking-care-you-self-care-family-caregivers/
+
+# --- Veterans Health ---
+https://www.va.gov/health-care/about-va-health-benefits/
+https://www.va.gov/health-care/eligibility/
+
+# --- Mental Health ---
+https://www.nimh.nih.gov/health/find-help
+https://www.samhsa.gov/find-help/national-helpline
+
+# --- Dental & Vision ---
+https://www.healthcare.gov/coverage/dental-coverage/
+https://www.medicare.gov/coverage/dental-services
+https://www.medicare.gov/coverage/eyeglasses-contact-lenses
