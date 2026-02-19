@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: healthassist-db
+    environment:
+      POSTGRES_DB: healthassist
+      POSTGRES_USER: healthassist
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-healthassist123}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U healthassist"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./healthcare-assistant-backend
+    container_name: healthassist-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ZOCDOC_API_KEY=${ZOCDOC_API_KEY:-}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-1045121225058-evthv0bogs2i0k5l015a04eoig1ltsnp.apps.googleusercontent.com}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=healthassist
+      - DB_USERNAME=healthassist
+      - DB_PASSWORD=${DB_PASSWORD:-healthassist123}
+      - CORS_ALLOWED_ORIGINS=https://doctors.sirish.world,http://doctors.sirish.world
+      - CALENDAR_EMAIL=${CALENDAR_EMAIL:-sirish.mandalika@gmail.com}
+      - GOOGLE_SA_KEY_PATH=/app/config/service-account.json
+      - SMTP_EMAIL=${SMTP_EMAIL:-zumanely0@gmail.com}
+      - SMTP_APP_PASSWORD=${SMTP_APP_PASSWORD:-}
+      - NOTIFICATION_CC_EMAIL=${NOTIFICATION_CC_EMAIL:-zumanely0@gmail.com}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+    volumes:
+      - ./healthcare-assistant-backend/config:/app/config:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build: ./healthcare-assistant-frontend
+    container_name: healthassist-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:

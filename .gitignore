@@ -1,0 +1,39 @@
+# Java / Maven
+healthcare-assistant-backend/target/
+*.class
+*.jar
+*.war
+*.log
+.mvn/
+mvnw
+mvnw.cmd
+
+# Node / React
+healthcare-assistant-frontend/node_modules/
+healthcare-assistant-frontend/dist/
+healthcare-assistant-frontend/.cache/
+
+# Environment files
+.env
+.env.local
+.env.production.local
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+
+# Logs
+*.log
+nohup.out
+app.log
+frontend.log
+healthcare-assistant-backend/config/service-account.json
+.env

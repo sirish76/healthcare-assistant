@@ -1,0 +1,91 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: healthcare-assistant
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:healthassist}
+    username: ${DB_USERNAME:healthassist}
+    password: ${DB_PASSWORD:healthassist123}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Email (Gmail SMTP)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SMTP_EMAIL:zumanely0@gmail.com}
+    password: ${SMTP_APP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enabled: true
+            required: true
+
+# Anthropic Claude API
+anthropic:
+  api:
+    key: ${ANTHROPIC_API_KEY:}
+    url: https://api.anthropic.com/v1/messages
+    model: claude-sonnet-4-5-20250929
+    max-tokens: 4096
+
+# Google OAuth
+google:
+  client:
+    id: ${GOOGLE_CLIENT_ID:1045121225058-evthv0bogs2i0k5l015a04eoig1ltsnp.apps.googleusercontent.com}
+
+# Scheduling / Google Calendar
+scheduling:
+  calendar:
+    email: ${CALENDAR_EMAIL:sirish.mandalika@gmail.com}
+  service-account:
+    key-path: ${GOOGLE_SA_KEY_PATH:/app/config/service-account.json}
+  slot-duration-minutes: 20
+  timezone: America/Los_Angeles
+  business-hours:
+    start: 9
+    end: 17
+  days-ahead: 14
+  notification:
+    cc: ${NOTIFICATION_CC_EMAIL:zumanely0@gmail.com}
+
+# ZocDoc API
+zocdoc:
+  api:
+    key: ${ZOCDOC_API_KEY:}
+    base-url: https://api.zocdoc.com/directory/v2
+
+# Stripe Payment
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY:}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+  price-cents: 1999
+  success-url: ${STRIPE_SUCCESS_URL:https://doctors.sirish.world?payment=success&session_id={CHECKOUT_SESSION_ID}}
+  cancel-url: ${STRIPE_CANCEL_URL:https://doctors.sirish.world?payment=cancelled}
+
+# Knowledge Service
+knowledge:
+  service:
+    url: ${KNOWLEDGE_SERVICE_URL:http://knowledge:8081}
+
+# CORS
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,https://doctors.sirish.world}
+
+# Logging
+logging:
+  level:
+    com.healthassist: DEBUG
+    org.springframework.web: INFO

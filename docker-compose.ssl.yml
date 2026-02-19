@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: healthassist-postgres
+    environment:
+      - POSTGRES_DB=healthassist
+      - POSTGRES_USER=healthassist
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-healthassist123}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U healthassist"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./healthcare-assistant-backend
+    container_name: healthassist-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ZOCDOC_API_KEY=${ZOCDOC_API_KEY:-}
+      - CORS_ALLOWED_ORIGINS=https://doctors.sirish.world
+      - KNOWLEDGE_SERVICE_URL=http://knowledge:8081
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=healthassist
+      - DB_USERNAME=healthassist
+      - DB_PASSWORD=${DB_PASSWORD:-healthassist123}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-1045121225058-evthv0bogs2i0k5l015a04eoig1ltsnp.apps.googleusercontent.com}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      knowledge:
+        condition: service_started
+    restart: unless-stopped
+
+  knowledge:
+    build: ./knowledge-service
+    container_name: healthassist-knowledge
+    ports:
+      - "8081:8081"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    volumes:
+      - knowledge-data:/app/data
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./healthcare-assistant-frontend
+      dockerfile: Dockerfile.ssl
+    container_name: healthassist-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  knowledge-data:
+  postgres-data:
