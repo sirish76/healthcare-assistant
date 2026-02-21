@@ -12,6 +12,8 @@ import {
   Camera,
   Shield,
   Calendar,
+  FileText,
+  Info,
 } from 'lucide-react';
 
 const BRAND = {
@@ -38,8 +40,20 @@ export default function ProfilePage({ onBack }) {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState(null);
 
+  // Insurance plan — stored ONLY in localStorage, never sent to server
+  const [insurancePlan, setInsurancePlan] = useState({
+    carrier: '',
+    planName: '',
+  });
+  const [insuranceSaved, setInsuranceSaved] = useState(false);
+
   useEffect(() => {
     loadProfile();
+    // Load insurance plan from localStorage only
+    const savedPlan = localStorage.getItem('healthassist_insurance_plan');
+    if (savedPlan) {
+      try { setInsurancePlan(JSON.parse(savedPlan)); } catch (e) {}
+    }
   }, []);
 
   const loadProfile = async () => {
@@ -282,6 +296,93 @@ export default function ProfilePage({ onBack }) {
                 </button>
               </form>
             )}
+          </div>
+
+          {/* My Insurance Plan — LOCAL ONLY, never stored on server */}
+          <div className="mt-6 bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-100">
+            <div className="flex items-start justify-between mb-1">
+              <h2 className="text-xl font-bold" style={{ color: BRAND.primary, fontFamily: "'Playfair Display', Georgia, serif" }}>
+                My Insurance Plan
+              </h2>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: BRAND.warmLight }}>
+                <FileText size={18} style={{ color: BRAND.warm }} />
+              </div>
+            </div>
+            <p className="text-gray-400 text-sm mb-6">
+              Tell Zume about your plan so it can give you tailored answers about your coverage, copays, and benefits.
+            </p>
+
+            <div className="flex items-start gap-2 p-3 rounded-xl mb-6 text-xs" style={{ background: '#EFF6FF', color: '#3B82F6' }}>
+              <Info size={14} className="shrink-0 mt-0.5" />
+              <span>
+                <strong>Your privacy matters.</strong> Your insurance info is stored only on this device and is never sent to our servers. 
+                Zume uses publicly available plan details to answer your questions.
+              </span>
+            </div>
+
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: BRAND.primary }}>
+                  Insurance Carrier
+                </label>
+                <select
+                  value={insurancePlan.carrier}
+                  onChange={(e) => { setInsurancePlan(prev => ({ ...prev, carrier: e.target.value, planName: '' })); setInsuranceSaved(false); }}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-100 transition-all appearance-none"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 16px center' }}
+                >
+                  <option value="">Select your carrier</option>
+                  <option value="Kaiser Permanente">Kaiser Permanente</option>
+                  <option value="Blue Shield of California">Blue Shield of California</option>
+                  <option value="Blue Cross Blue Shield">Blue Cross Blue Shield</option>
+                  <option value="Anthem">Anthem</option>
+                  <option value="UnitedHealthcare">UnitedHealthcare</option>
+                  <option value="Aetna">Aetna</option>
+                  <option value="Cigna">Cigna</option>
+                  <option value="Humana">Humana</option>
+                  <option value="Molina Healthcare">Molina Healthcare</option>
+                  <option value="Health Net">Health Net</option>
+                  <option value="Oscar Health">Oscar Health</option>
+                  <option value="Centene">Centene</option>
+                  <option value="Medicare">Medicare (Original)</option>
+                  <option value="Medicaid">Medicaid</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: BRAND.primary }}>
+                  Plan Name
+                </label>
+                <input
+                  type="text"
+                  value={insurancePlan.planName}
+                  onChange={(e) => { setInsurancePlan(prev => ({ ...prev, planName: e.target.value })); setInsuranceSaved(false); }}
+                  placeholder="e.g., Bronze 60 HMO, Silver 70 PPO, Gold 80, Advantage HMO..."
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-100 transition-all"
+                />
+              </div>
+
+              {insuranceSaved && (
+                <div className="flex items-center gap-2 text-sm p-3 rounded-xl" style={{ background: BRAND.accentLight, color: BRAND.accent }}>
+                  <CheckCircle2 size={16} />
+                  Insurance plan saved to this device! Zume will use this to personalize your answers.
+                </div>
+              )}
+
+              <button
+                onClick={() => {
+                  localStorage.setItem('healthassist_insurance_plan', JSON.stringify(insurancePlan));
+                  setInsuranceSaved(true);
+                  setTimeout(() => setInsuranceSaved(false), 4000);
+                }}
+                disabled={!insurancePlan.carrier}
+                className="w-full py-4 rounded-xl text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+                style={{ background: `linear-gradient(135deg, ${BRAND.warm}, #E8941A)` }}
+              >
+                <Save size={18} /> Save Insurance Plan (This Device Only)
+              </button>
+            </div>
           </div>
 
           {/* Account info card */}

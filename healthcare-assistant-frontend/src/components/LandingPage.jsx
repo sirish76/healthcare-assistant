@@ -24,6 +24,9 @@ import {
   CheckCircle2,
   LogOut,
   User,
+  FileText,
+  Loader2,
+  Shield,
 } from 'lucide-react';
 
 /* ─────────────────── colour tokens ─────────────────── */
@@ -43,39 +46,39 @@ const BRAND = {
 /* ─────────────────── demo conversations ─────────────────── */
 const DEMO_CONVERSATIONS = [
   {
+    label: 'Unemployed',
+    messages: [
+      { role: 'user', text: "I lost my job in Texas. Besides COBRA, what are my options?" },
+      { role: 'assistant', text: "Sorry to hear that. You have several options beyond COBRA:\n\n🛡️ **ACA Marketplace** — job loss qualifies you for a Special Enrollment Period (60 days)\n🛡️ **Medicaid** — Texas has strict eligibility, but check if you qualify\n💰 **Subsidies** — you may get significant premium help on Healthcare.gov" },
+      { role: 'user', text: "How much would a marketplace plan cost?" },
+      { role: 'assistant', text: "With subsidies, many people pay **$0 – $50/month** for a Silver plan. Your cost depends on income — if you're under 150% FPL, you could qualify for a **$0 premium** plan with very low copays." },
+    ],
+  },
+  {
+    label: 'Self-Employed',
+    messages: [
+      { role: 'user', text: "I'm self-employed. What's the cheapest health plan for me?" },
+      { role: 'assistant', text: "Great question! For self-employed individuals, the best options are:\n\n💼 **ACA Marketplace** — tax credits can reduce premiums significantly\n🏥 **Health-share plans** — lower cost but not traditional insurance\n💰 **HSA + Bronze plan** — lowest premiums + tax-deductible savings" },
+      { role: 'user', text: "Can I deduct the premiums?" },
+      { role: 'assistant', text: "Yes! As self-employed, you can deduct **100% of your health insurance premiums** from your taxable income. This includes medical, dental, and long-term care premiums for you, your spouse, and dependents." },
+    ],
+  },
+  {
     label: 'Medicare',
     messages: [
-      { role: 'user', text: "What's the difference between Medicare Part A and Part B?" },
-      { role: 'assistant', text: "Great question! **Part A** covers hospital stays, skilled nursing, and hospice care — most people don't pay a premium. **Part B** covers doctor visits, outpatient services, and preventive care with a monthly premium of $174.70." },
-      { role: 'user', text: "Do I need to sign up or is it automatic?" },
-      { role: 'assistant', text: "If you're receiving Social Security, you'll be **automatically enrolled** at 65. Otherwise, sign up during your Initial Enrollment Period — the 7-month window around your 65th birthday." },
+      { role: 'user', text: "My mom is 64 and retiring next year. When can she get Medicare?" },
+      { role: 'assistant', text: "She'll be eligible for Medicare at **age 65**. Her Initial Enrollment Period starts **3 months before** her 65th birthday month and ends 3 months after.\n\n📅 She should sign up during this window to avoid late penalties!" },
+      { role: 'user', text: "What does it cover?" },
+      { role: 'assistant', text: "Medicare has key parts:\n\n🏥 **Part A** — Hospital stays (usually free)\n👨‍⚕️ **Part B** — Doctor visits ($174.70/mo)\n💊 **Part D** — Prescriptions (varies)\n⭐ **Part C** — Medicare Advantage (combines all + extras)\n\nWant me to compare plans in her area?" },
     ],
   },
   {
-    label: 'Doctors',
+    label: 'Coverage',
     messages: [
-      { role: 'user', text: "I need a cardiologist in Fremont who accepts Blue Shield PPO" },
-      { role: 'assistant', text: "I found **3 top-rated cardiologists** near Fremont:\n\n🏥 Dr. Anita Patel — 4.9★ — Washington Hospital\n🏥 Dr. James Chen — 4.8★ — Fremont Medical\n🏥 Dr. Sanjay Gupta — 4.7★ — Kaiser" },
-      { role: 'user', text: "Can you book with Dr. Patel?" },
-      { role: 'assistant', text: "Dr. Patel has availability:\n\n📅 **Wed Feb 19** — 10:00 AM, 2:30 PM\n📅 **Thu Feb 20** — 9:00 AM, 11:15 AM\n\nWhich time works best?" },
-    ],
-  },
-  {
-    label: 'Caregivers',
-    messages: [
-      { role: 'user', text: "I'm caring for my mom with dementia and feeling burned out" },
-      { role: 'assistant', text: "I understand — caregiving for a loved one with dementia is incredibly demanding. You're not alone. Let me help with some options:" },
-      { role: 'user', text: "What support is available?" },
-      { role: 'assistant', text: "There's quite a bit:\n\n💚 **Respite care** — temporary relief so you can rest\n💚 **Support groups** — local caregiver communities\n💚 **Counseling** — caregiver-focused sessions\n💚 **Home health aides** — covered by Medicaid\n\nWant me to find resources near Fremont?" },
-    ],
-  },
-  {
-    label: 'Visitors',
-    messages: [
-      { role: 'user', text: "My parents are visiting from India for 6 months. Insurance options?" },
-      { role: 'assistant', text: "Visitors aren't eligible for Medicare/Medicaid, but good options exist:\n\n🛡️ **Visitor insurance** — $50-150/month\n🛡️ **Travel medical** — emergency coverage\n🛡️ **Marketplace plans** — with legal status" },
-      { role: 'user', text: "Which covers pre-existing conditions?" },
-      { role: 'assistant', text: "Most plans have a **6-12 month exclusion period**. However, **INS Visitor Care** covers acute onset of pre-existing conditions after a waiting period. Want me to compare plans for your parents?" },
+      { role: 'user', text: "I have Kaiser Bronze 60 HMO. What are my copays?" },
+      { role: 'assistant', text: "With your **Kaiser Bronze 60 HMO**, here's a quick breakdown:\n\n👨‍⚕️ **Primary care:** $40 copay (after deductible)\n🔬 **Specialist:** $80 (after deductible)\n💊 **Generic Rx:** $15 copay\n🏥 **ER:** 40% coinsurance\n📊 **Deductible:** ~$6,500/year" },
+      { role: 'user', text: "Is mental health covered?" },
+      { role: 'assistant', text: "Yes! Kaiser Bronze 60 covers mental health services. **Outpatient therapy** has the same copay structure as specialist visits. Telehealth mental health visits are also covered. Kaiser has integrated behavioral health so you can self-refer." },
     ],
   },
 ];
@@ -494,6 +497,90 @@ function Navbar({ mobileMenuOpen, setMobileMenuOpen, onOpenChat, onOpenContact, 
    ════════════════════════════════════════════════════════ */
 function HeroSection({ onOpenContact, onOpenChat }) {
   const { user } = useAuth();
+  const [selectedCarrier, setSelectedCarrier] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState('');
+  const [planSummary, setPlanSummary] = useState(null);
+  const [loadingSummary, setLoadingSummary] = useState(false);
+
+  const CARRIERS = [
+    'Kaiser Permanente', 'Blue Shield of California', 'Blue Cross Blue Shield',
+    'Anthem', 'UnitedHealthcare', 'Aetna', 'Cigna', 'Humana',
+    'Molina Healthcare', 'Health Net', 'Oscar Health', 'Centene',
+    'Medicare (Original)', 'Medicaid',
+  ];
+
+  const SAMPLE_PLANS = {
+    'Kaiser Permanente': ['Bronze 60 HMO', 'Silver 70 HMO', 'Gold 80 HMO', 'Platinum 90 HMO'],
+    'Blue Shield of California': ['Bronze 60 PPO', 'Silver 70 PPO', 'Gold 80 PPO', 'Platinum 90 PPO'],
+    'Blue Cross Blue Shield': ['Bronze PPO', 'Silver PPO', 'Gold PPO', 'Platinum PPO'],
+    'Anthem': ['Bronze Pathway HMO', 'Silver Pathway HMO', 'Gold Pathway HMO'],
+    'UnitedHealthcare': ['Bronze Compass HMO', 'Silver Compass HMO', 'Gold Compass HMO'],
+    'Aetna': ['Bronze CVS Health HMO', 'Silver CVS Health HMO', 'Gold CVS Health HMO'],
+    'Cigna': ['Bronze Connect HMO', 'Silver Connect HMO', 'Gold OA Plus'],
+    'Humana': ['Bronze HMO', 'Silver HMO', 'Gold HMO'],
+    'Molina Healthcare': ['Bronze HMO', 'Silver HMO', 'Gold HMO'],
+    'Health Net': ['Bronze HMO', 'Silver HMO', 'Gold HMO'],
+    'Oscar Health': ['Bronze Classic', 'Silver Classic', 'Gold Classic'],
+    'Centene': ['Bronze HMO', 'Silver HMO', 'Gold HMO'],
+  };
+
+  const PLAN_SUMMARIES = {
+    'Bronze': {
+      tier: 'Bronze',
+      coverage: '60%',
+      deductible: '$6,000 – $7,000',
+      oopMax: '$8,500 – $9,200',
+      primaryVisit: '$40 – $75 (after deductible)',
+      specialist: '$80 – $100 (after deductible)',
+      genericRx: '$15 – $25',
+      er: '40% coinsurance after deductible',
+      bestFor: 'Lower premiums, good for healthy individuals who want catastrophic coverage',
+    },
+    'Silver': {
+      tier: 'Silver',
+      coverage: '70%',
+      deductible: '$3,000 – $5,000',
+      oopMax: '$7,500 – $8,700',
+      primaryVisit: '$30 – $50 copay',
+      specialist: '$65 – $80 copay',
+      genericRx: '$10 – $20',
+      er: '$350 copay + 30% coinsurance',
+      bestFor: 'Best balance of premium and coverage — eligible for cost-sharing reductions',
+    },
+    'Gold': {
+      tier: 'Gold',
+      coverage: '80%',
+      deductible: '$0 – $1,500',
+      oopMax: '$7,000 – $8,200',
+      primaryVisit: '$20 – $35 copay',
+      specialist: '$50 – $65 copay',
+      genericRx: '$5 – $15',
+      er: '$250 copay + 20% coinsurance',
+      bestFor: 'Great for regular medical needs — lower out-of-pocket costs at each visit',
+    },
+    'Platinum': {
+      tier: 'Platinum',
+      coverage: '90%',
+      deductible: '$0',
+      oopMax: '$4,500 – $5,000',
+      primaryVisit: '$10 – $20 copay',
+      specialist: '$30 – $40 copay',
+      genericRx: '$5 – $10',
+      er: '$150 copay + 10% coinsurance',
+      bestFor: 'Highest premiums but lowest costs when you need care — ideal for frequent medical visits',
+    },
+  };
+
+  const handlePlanSelect = (plan) => {
+    setSelectedPlan(plan);
+    setLoadingSummary(true);
+    // Determine tier from plan name
+    const tier = Object.keys(PLAN_SUMMARIES).find(t => plan.toLowerCase().includes(t.toLowerCase()));
+    setTimeout(() => {
+      setPlanSummary(tier ? PLAN_SUMMARIES[tier] : null);
+      setLoadingSummary(false);
+    }, 600);
+  };
 
   return (
     <section
@@ -509,43 +596,198 @@ function HeroSection({ onOpenContact, onOpenChat }) {
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8 w-full pt-28 pb-16 lg:pt-32 lg:pb-20">
         {/* Top — tagline */}
-        <div className="text-center mb-12 lg:mb-16 animate-fade-in-up">
+        <div className="text-center mb-12 lg:mb-14 animate-fade-in-up">
           <p className="text-lg md:text-xl lg:text-2xl leading-relaxed max-w-3xl mx-auto font-body" style={{ color: BRAND.muted }}>
             Zumanely blends advanced technology with human connection to deliver
             personalized care for your physical, emotional, and mental health.
           </p>
         </div>
 
-        {/* Two columns — Human Specialist (left) + AI Demo (right) */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
-
-          {/* Left — Talk to Human Specialist */}
-          <div className="animate-fade-in-up delay-200">
-            <div className="rounded-3xl p-8 lg:p-10 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6" style={{ background: `${BRAND.warm}15` }}>
-                <Users size={26} style={{ color: BRAND.warm }} />
+        {/* Zume on top — full width */}
+        <div className="mb-7 animate-fade-in-up delay-100">
+          <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 bg-white shadow-lg flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
+            {/* Left side — text + examples */}
+            <div className="lg:w-[45%] shrink-0">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: BRAND.accentLight }}>
+                  <Sparkles size={22} style={{ color: BRAND.accent }} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
+                    <span style={{ color: BRAND.accent }}>Zume</span>
+                  </h2>
+                  <p className="text-xs" style={{ color: BRAND.muted }}>AI Health Assistant</p>
+                </div>
               </div>
-              <h2 className="text-2xl lg:text-3xl font-display font-bold mb-4" style={{ color: BRAND.primary }}>
-                Talk to Our{' '}
-                <span style={{ color: BRAND.warm }}>Human Specialist</span>
-              </h2>
-              <p className="leading-relaxed mb-6 text-base" style={{ color: BRAND.muted }}>
-                It's free and only 20 minutes to understand what custom care you need.
-                Our specialists provide personalized guidance for your unique health journey.
+
+              <p className="text-sm leading-relaxed mb-5" style={{ color: BRAND.muted }}>
+                Ask anything about healthcare and I can help you with answers.
               </p>
 
-              <div className="space-y-4 mb-8">
+              {/* Example questions */}
+              <div className="space-y-2 mb-5">
                 {[
-                  'Free 20-minute consultation call',
-                  'Personalized care plan for your needs',
-                  'Expert guidance on insurance & coverage',
-                  'Connect with the right specialists',
+                  "I lost my job — besides COBRA, what are my options in Texas?",
+                  "I'm self-employed, what's the cheapest health plan for me?",
+                  "My mom is 64 and retiring — when can she get Medicare?",
+                ].map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={onOpenChat}
+                    className="w-full text-left px-3 py-2.5 rounded-xl bg-gray-50 hover:bg-teal-50 border border-gray-100 hover:border-teal-200 text-xs text-gray-600 hover:text-teal-700 transition-all flex items-start gap-2"
+                  >
+                    <MessageSquare size={12} className="shrink-0 mt-0.5 opacity-40" />
+                    {q}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={onOpenChat}
+                className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)`, color: 'white' }}
+              >
+                <MessageSquare size={16} />
+                {user ? 'Continue Chatting' : 'Try Zume Now'}
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+              </button>
+            </div>
+
+            {/* Right side — chat demo */}
+            <div className="lg:flex-1 min-w-0">
+              <AnimatedChatDemo variant="compact" />
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                <span className="text-[10px] font-medium" style={{ color: BRAND.muted }}>Live demo — cycling through real conversations</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Three panels below — Z-Cover, Z-Pro, Z-Find */}
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-7 items-stretch">
+
+          {/* ─── Z-Cover ─── */}
+          <div className="animate-fade-in-up delay-200">
+            <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: '#EDE9FE' }}>
+                  <Shield size={22} style={{ color: '#7C3AED' }} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
+                    Z-<span style={{ color: '#7C3AED' }}>Cover</span>
+                  </h2>
+                  <p className="text-xs" style={{ color: BRAND.muted }}>Understand your insurance</p>
+                </div>
+              </div>
+
+              <p className="text-sm leading-relaxed mb-5" style={{ color: BRAND.muted }}>
+                Select your insurance plan and get an instant summary of your coverage, deductibles, and copays.
+              </p>
+
+              <select
+                value={selectedCarrier}
+                onChange={(e) => { setSelectedCarrier(e.target.value); setSelectedPlan(''); setPlanSummary(null); }}
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition-all appearance-none mb-3"
+                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 16px center' }}
+              >
+                <option value="">Select your carrier</option>
+                {CARRIERS.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+
+              {selectedCarrier && SAMPLE_PLANS[selectedCarrier] && (
+                <select
+                  value={selectedPlan}
+                  onChange={(e) => handlePlanSelect(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition-all appearance-none mb-4"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 16px center' }}
+                >
+                  <option value="">Select your plan</option>
+                  {SAMPLE_PLANS[selectedCarrier].map(p => <option key={p} value={p}>{p}</option>)}
+                </select>
+              )}
+
+              {loadingSummary && (
+                <div className="flex items-center justify-center py-6">
+                  <Loader2 size={20} className="animate-spin" style={{ color: '#7C3AED' }} />
+                </div>
+              )}
+
+              {planSummary && !loadingSummary && (
+                <div className="rounded-2xl p-4 mb-4 text-xs space-y-2 border animate-fade-in" style={{ background: '#F5F3FF', borderColor: '#DDD6FE' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style={{ background: '#7C3AED' }}>
+                      {planSummary.tier}
+                    </span>
+                    <span className="font-semibold" style={{ color: BRAND.primary }}>
+                      {selectedCarrier} {selectedPlan}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div><span className="text-gray-400">Covers:</span> <strong className="text-gray-700">{planSummary.coverage}</strong></div>
+                    <div><span className="text-gray-400">Deductible:</span> <strong className="text-gray-700">{planSummary.deductible}</strong></div>
+                    <div><span className="text-gray-400">OOP Max:</span> <strong className="text-gray-700">{planSummary.oopMax}</strong></div>
+                    <div><span className="text-gray-400">Primary:</span> <strong className="text-gray-700">{planSummary.primaryVisit}</strong></div>
+                    <div><span className="text-gray-400">Specialist:</span> <strong className="text-gray-700">{planSummary.specialist}</strong></div>
+                    <div><span className="text-gray-400">Generic Rx:</span> <strong className="text-gray-700">{planSummary.genericRx}</strong></div>
+                  </div>
+                  <p className="text-gray-500 pt-1 italic">{planSummary.bestFor}</p>
+                </div>
+              )}
+
+              {!planSummary && !loadingSummary && !selectedPlan && (
+                <div className="flex-grow flex items-center justify-center py-4">
+                  <p className="text-xs text-center text-gray-300">
+                    Pick a carrier and plan above to see your coverage summary
+                  </p>
+                </div>
+              )}
+
+              <div className="flex-grow" />
+              <button
+                onClick={onOpenChat}
+                className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', color: 'white' }}
+              >
+                <MessageSquare size={16} />
+                Ask Zume About My Plan
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+              </button>
+            </div>
+          </div>
+
+          {/* ─── Z-Pro — Human Specialist ─── */}
+          <div className="animate-fade-in-up delay-300">
+            <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: BRAND.warmLight }}>
+                  <Users size={22} style={{ color: BRAND.warm }} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
+                    Z-<span style={{ color: BRAND.warm }}>Pro</span>
+                  </h2>
+                  <p className="text-xs" style={{ color: BRAND.muted }}>Human specialist</p>
+                </div>
+              </div>
+
+              <p className="text-sm leading-relaxed mb-6" style={{ color: BRAND.muted }}>
+                Get connected to an actual healthcare professional who will guide you step by step in navigating your situation and customize it for you.
+              </p>
+
+              <div className="space-y-3.5 mb-8">
+                {[
+                  "We simplify your insurance — helping you understand exactly what's covered",
+                  'Dedicated support for self-employed, unemployed & retirees',
+                  'Matched with the right doctors & specialists for your needs',
+                  'Your personal healthcare concierge — from questions to appointments',
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ background: `${BRAND.warm}15` }}>
-                      <CheckCircle2 size={12} style={{ color: BRAND.warm }} />
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${BRAND.warm}15` }}>
+                      <CheckCircle2 size={11} style={{ color: BRAND.warm }} />
                     </div>
-                    <span className="text-sm" style={{ color: BRAND.muted }}>{item}</span>
+                    <span className="text-xs leading-relaxed" style={{ color: BRAND.muted }}>{item}</span>
                   </div>
                 ))}
               </div>
@@ -553,55 +795,112 @@ function HeroSection({ onOpenContact, onOpenChat }) {
               <div className="flex-grow" />
               <button
                 onClick={() => onOpenContact('free-20')}
-                className="group w-full px-7 py-4 rounded-full text-sm font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2.5"
+                className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
                 style={{ background: `linear-gradient(135deg, ${BRAND.warm}, #E8941A)`, color: 'white' }}
               >
-                <Phone size={18} />
-                Schedule a Free 20-Min Call
-                <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+                <Phone size={16} />
+                Free 20-Min Consultation
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
               </button>
 
               <button
                 onClick={() => onOpenContact('paid-60')}
-                className="group w-full mt-3 px-7 py-4 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2.5 border-2"
+                className="group w-full mt-3 px-5 py-3.5 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 border-2"
                 style={{ borderColor: BRAND.primary, color: BRAND.primary, background: 'white' }}
               >
-                <Clock size={18} />
+                <Clock size={16} />
                 Full Hour Session — Only $19.99
-                <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
               </button>
             </div>
           </div>
 
-          {/* Right — AI Demo */}
-          <div className="animate-slide-right delay-300">
-            <div className="rounded-3xl p-8 lg:p-10 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
-              <div className="mb-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-2" style={{ color: BRAND.accent }}>
-                  Zume
-                </p>
-                <p className="text-sm" style={{ color: BRAND.muted }}>
-                  Try Zume - your AI health assistant
-                </p>
+          {/* ─── Z-Find — Find Nearby ─── */}
+          <div className="animate-fade-in-up delay-400">
+            <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: '#FEE2E2' }}>
+                  <MapPin size={22} style={{ color: '#DC2626' }} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
+                    Z-<span style={{ color: '#DC2626' }}>Find</span>
+                  </h2>
+                  <p className="text-xs" style={{ color: BRAND.muted }}>Find care near you</p>
+                </div>
               </div>
 
-              <AnimatedChatDemo variant="compact" />
+              <p className="text-sm leading-relaxed mb-6" style={{ color: BRAND.muted }}>
+                Quickly locate doctors, urgent care, ERs, and pharmacies in your area.
+              </p>
 
-              <div className="flex items-center justify-center gap-2 mt-4 mb-6">
-                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-xs font-medium" style={{ color: BRAND.muted }}>Live demo — cycling through real conversations</span>
+              <div className="space-y-3 mb-4 flex-grow">
+                <button
+                  onClick={onOpenChat}
+                  className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all duration-300 flex items-center gap-4"
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#EFF6FF' }}>
+                    <Stethoscope size={18} style={{ color: '#3B82F6' }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Find Doctors</p>
+                    <p className="text-xs text-gray-400">Search by specialty & insurance</p>
+                  </div>
+                  <ArrowRight size={14} className="text-gray-300 group-hover:text-blue-400 transition-colors shrink-0" />
+                </button>
+
+                <a
+                  href="https://www.google.com/maps/search/urgent+care+near+me"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-red-200 hover:bg-red-50/30 transition-all duration-300 flex items-center gap-4"
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#FEF2F2' }}>
+                    <Activity size={18} style={{ color: '#DC2626' }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Urgent Care / ER</p>
+                    <p className="text-xs text-gray-400">Nearest emergency facilities</p>
+                  </div>
+                  <ArrowRight size={14} className="text-gray-300 group-hover:text-red-400 transition-colors shrink-0" />
+                </a>
+
+                <a
+                  href="https://www.google.com/maps/search/pharmacy+near+me"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-green-200 hover:bg-green-50/30 transition-all duration-300 flex items-center gap-4"
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#F0FDF4' }}>
+                    <Heart size={18} style={{ color: '#16A34A' }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Pharmacies</p>
+                    <p className="text-xs text-gray-400">CVS, Walgreens & more nearby</p>
+                  </div>
+                  <ArrowRight size={14} className="text-gray-300 group-hover:text-green-400 transition-colors shrink-0" />
+                </a>
+
+                <a
+                  href="https://www.google.com/maps/search/hospital+near+me"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-purple-200 hover:bg-purple-50/30 transition-all duration-300 flex items-center gap-4"
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#F5F3FF' }}>
+                    <MapPin size={18} style={{ color: '#7C3AED' }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Hospitals</p>
+                    <p className="text-xs text-gray-400">Major hospitals near you</p>
+                  </div>
+                  <ArrowRight size={14} className="text-gray-300 group-hover:text-purple-400 transition-colors shrink-0" />
+                </a>
               </div>
 
-              <div className="flex-grow" />
-              <button
-                onClick={onOpenChat}
-                className="group w-full px-7 py-4 rounded-full text-sm font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2.5"
-                style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)`, color: 'white' }}
-              >
-                <MessageSquare size={18} />
-                {user ? 'Continue Chatting with Zume' : 'Try Zume Now'}
-                <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
-              </button>
+              <p className="text-[10px] text-center text-gray-300">
+                Opens Google Maps with your location
+              </p>
             </div>
           </div>
         </div>
@@ -725,10 +1024,10 @@ function AIChatSection({ onOpenChat }) {
    ════════════════════════════════════════════════════════ */
 function ServicesSection({ active, setActive }) {
   const services = [
+    { title: 'Plan Insights', icon: <FileText size={22} />, desc: 'Tell Zume your insurance plan and get instant, personalized answers about your coverage, deductibles, copays, and benefits — all from publicly available plan data.' },
     { title: 'Complex Care', icon: <Stethoscope size={22} />, desc: 'Comprehensive care management for individuals with complex medical needs and chronic conditions. Our providers coordinate across specialists for seamless care.' },
     { title: 'Stress Management', icon: <Brain size={22} />, desc: 'Evidence-based programs combining mindfulness, counseling, and lifestyle coaching. Build resilience and develop sustainable wellness habits.' },
     { title: 'Personal Health', icon: <Heart size={22} />, desc: 'Personalized programs from nutrition coaching and fitness guidance to preventive care planning for your optimal well-being.' },
-    { title: 'Visitor Care', icon: <Plane size={22} />, desc: 'Specialized care navigation for visitors and families. Access healthcare services and understand insurance options during your stay.' },
   ];
 
   return (

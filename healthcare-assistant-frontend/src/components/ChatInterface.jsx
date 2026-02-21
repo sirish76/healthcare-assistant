@@ -27,6 +27,21 @@ const SUGGESTED_QUESTIONS = [
   },
 ];
 
+// Helper to get insurance plan from localStorage (never from server)
+const getLocalInsurancePlan = () => {
+  try {
+    const saved = localStorage.getItem('healthassist_insurance_plan');
+    if (saved) {
+      const plan = JSON.parse(saved);
+      if (plan.carrier && plan.planName) {
+        return `${plan.carrier} — ${plan.planName}`;
+      }
+      if (plan.carrier) return plan.carrier;
+    }
+  } catch (e) {}
+  return null;
+};
+
 function ChatInterface({ conversation, onUpdateMessages }) {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +88,15 @@ function ChatInterface({ conversation, onUpdateMessages }) {
         content: msg.content,
       }));
 
-      const response = await sendMessage(text, conversationHistory, sessionId);
+      // Prepend insurance plan context if available (from localStorage only)
+      const insurancePlan = getLocalInsurancePlan();
+      let messageToSend = text;
+      if (insurancePlan && messages.length === 0) {
+        // Only add context on first message of conversation
+        messageToSend = `[User's insurance plan: ${insurancePlan}]\n\n${text}`;
+      }
+
+      const response = await sendMessage(messageToSend, conversationHistory, sessionId);
 
       if (response.sessionId) {
         setSessionId(response.sessionId);
@@ -197,6 +220,24 @@ function ChatInterface({ conversation, onUpdateMessages }) {
 }
 
 function WelcomeScreen({ onSuggestionClick }) {
+  const insurancePlan = getLocalInsurancePlan();
+
+  const dynamicSuggestions = [
+    ...SUGGESTED_QUESTIONS,
+  ];
+
+  // If user has an insurance plan saved, add a personalized suggestion
+  if (insurancePlan) {
+    dynamicSuggestions.splice(2, 0, {
+      icon: <FileText size={18} />,
+      label: `My ${insurancePlan.split(' — ')[0]} Plan`,
+      message: `I have ${insurancePlan}. Can you summarize what's covered, my deductible, copays, and out-of-pocket max?`,
+    });
+  }
+
+  // Limit to 4 suggestions
+  const suggestions = dynamicSuggestions.slice(0, 4);
+
   return (
     <div className="max-w-2xl mx-auto flex flex-col items-center justify-center h-full text-center px-4">
       <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-teal-500 flex items-center justify-center shadow-xl mb-6">
@@ -211,7 +252,7 @@ function WelcomeScreen({ onSuggestionClick }) {
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
-        {SUGGESTED_QUESTIONS.map((suggestion, index) => (
+        {suggestions.map((suggestion, index) => (
           <button
             key={index}
             onClick={() => onSuggestionClick(suggestion.message)}
