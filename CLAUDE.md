@@ -38,6 +38,11 @@ Secrets are read from the root `.env` by docker compose: `ANTHROPIC_API_KEY`, `Z
 
 ## Architecture
 
+**Production routing (outside this repo).**
+- A host-level nginx terminates TLS for `zumanely.ai` and `doctors.sirish.world`. Its configs are in `/etc/nginx/sites-available/`.
+- Both domains proxy `/api/` to `:8080` and everything else to the frontend container on `:3000`.
+- Until 2026-10-10, `zumanely.ai` served a static landing page from `/var/www/zumanely-landing`, with the app under `/app`. Those files are kept, and the old config is in `zumanely.ai.backup-*`.
+
 **Request path.** The browser talks to nginx in the frontend container. nginx serves the SPA and proxies `/api/*` to `backend:8080`. In dev, Vite does the same proxying. `src/services/api.js` wraps every backend call.
 
 **Frontend.**
