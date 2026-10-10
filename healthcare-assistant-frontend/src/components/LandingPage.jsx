@@ -144,6 +144,34 @@ const animationStyles = `
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
+   .hero-video-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 80%;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+  }
+  .hero-video.loaded {
+    opacity: 1;
+  }
+  .hero-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(27,58,92,0.35) 0%,
+      rgba(27,58,92,0.20) 50%,
+      rgba(27,58,92,0.30) 100%
+    );
+  }
+
   .delay-100 { animation-delay: 0.1s; }
   .delay-200 { animation-delay: 0.2s; }
   .delay-300 { animation-delay: 0.3s; }
@@ -574,7 +602,6 @@ function HeroSection({ onOpenContact, onOpenChat }) {
   const handlePlanSelect = (plan) => {
     setSelectedPlan(plan);
     setLoadingSummary(true);
-    // Determine tier from plan name
     const tier = Object.keys(PLAN_SUMMARIES).find(t => plan.toLowerCase().includes(t.toLowerCase()));
     setTimeout(() => {
       setPlanSummary(tier ? PLAN_SUMMARIES[tier] : null);
@@ -583,335 +610,399 @@ function HeroSection({ onOpenContact, onOpenChat }) {
   };
 
   return (
-    <section
-      id="home"
-      className="relative min-h-screen flex items-center overflow-hidden"
-      style={{ background: `linear-gradient(180deg, #FFFFFF 0%, ${BRAND.bg} 100%)` }}
-    >
-      {/* Decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -right-32 w-[500px] h-[500px] rounded-full opacity-[0.08] animate-float" style={{ background: `radial-gradient(circle, ${BRAND.accent}, transparent 70%)` }} />
-        <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full opacity-[0.06]" style={{ background: `radial-gradient(circle, ${BRAND.warm}, transparent 70%)` }} />
-      </div>
+    <>
+      {/* ═══════════════════════════════════════════
+          PART 1: Full-viewport Video Hero
+          ═══════════════════════════════════════════ */}
+      <section
+        id="home"
+        className="relative flex items-center justify-center overflow-hidden" style={{minHeight: "100vh"}}
+      >
+        {/* Background video */}
+        <div className="hero-video-wrap">
+          <video
+            className="hero-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            onLoadedData={(e) => e.target.classList.add('loaded')}
+          >
+            <source src="/hero-bg.mp4?v=2" type="video/mp4" />
+          </video>
+          <div className="hero-video-overlay" />
+        </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 w-full pt-28 pb-16 lg:pt-32 lg:pb-20">
-        {/* Top — tagline */}
-        <div className="text-center mb-12 lg:mb-14 animate-fade-in-up">
-          <p className="text-lg md:text-xl lg:text-2xl leading-relaxed max-w-3xl mx-auto font-body" style={{ color: BRAND.muted }}>
+        {/* Hero text content — centered over video */}
+        <div className="relative z-10 text-left max-w-2xl px-6 lg:px-16 pt-24">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-8 animate-fade-in-up" style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(12px)' }}>
+            <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: BRAND.accent }} />
+            <span className="text-sm font-semibold" style={{ color: BRAND.accent }}>AI-Powered Healthcare Assistant</span>
+          </div>
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 animate-fade-in-up delay-100" style={{ color: '#FFFFFF', textShadow: '0 2px 30px rgba(0,0,0,0.3)' }}>
+            Care Led by Experts,{' '}
+            <span style={{ color: BRAND.accent }}>Powered by AI</span>
+          </h1>
+
+          <p className="text-lg md:text-xl leading-relaxed mb-10 animate-fade-in-up delay-200 font-body" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 12px rgba(0,0,0,0.2)' }}>
             Zumanely blends advanced technology with human connection to deliver
             personalized care for your physical, emotional, and mental health.
           </p>
-        </div>
 
-        {/* Zume on top — full width */}
-        <div className="mb-7 animate-fade-in-up delay-100">
-          <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 bg-white shadow-lg flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
-            {/* Left side — text + examples */}
-            <div className="lg:w-[45%] shrink-0">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: BRAND.accentLight }}>
-                  <Sparkles size={22} style={{ color: BRAND.accent }} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
-                    <span style={{ color: BRAND.accent }}>Zume</span>
-                  </h2>
-                  <p className="text-xs" style={{ color: BRAND.muted }}>AI Health Assistant</p>
-                </div>
-              </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up delay-300">
+            <button
+              onClick={onOpenChat}
+              className="group px-8 py-4 rounded-full text-base font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 flex items-center justify-center gap-2.5"
+              style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)`, color: 'white' }}
+            >
+              <MessageSquare size={20} />
+              {user ? 'Continue Chatting' : 'Talk to Zume AI'}
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </button>
+            <button
+              onClick={() => onOpenContact('free-20')}
+              className="group px-8 py-4 rounded-full text-base font-semibold transition-all duration-300 hover:-translate-y-1 flex items-center justify-center gap-2.5"
+              style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)', color: '#FFFFFF', border: '1.5px solid rgba(255,255,255,0.35)', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}
+            >
+              <Phone size={18} />
+              Free Consultation
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
 
-              <p className="text-sm leading-relaxed mb-5" style={{ color: BRAND.muted }}>
-                Ask anything about healthcare and I can help you with answers.
-              </p>
-
-              {/* Example questions */}
-              <div className="space-y-2 mb-5">
-                {[
-                  "I lost my job — besides COBRA, what are my options in Texas?",
-                  "I'm self-employed, what's the cheapest health plan for me?",
-                  "My mom is 64 and retiring — when can she get Medicare?",
-                ].map((q, i) => (
-                  <button
-                    key={i}
-                    onClick={onOpenChat}
-                    className="w-full text-left px-3 py-2.5 rounded-xl bg-gray-50 hover:bg-teal-50 border border-gray-100 hover:border-teal-200 text-xs text-gray-600 hover:text-teal-700 transition-all flex items-start gap-2"
-                  >
-                    <MessageSquare size={12} className="shrink-0 mt-0.5 opacity-40" />
-                    {q}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={onOpenChat}
-                className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)`, color: 'white' }}
-              >
-                <MessageSquare size={16} />
-                {user ? 'Continue Chatting' : 'Try Zume Now'}
-                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-              </button>
-            </div>
-
-            {/* Right side — chat demo */}
-            <div className="lg:flex-1 min-w-0">
-              <AnimatedChatDemo variant="compact" />
-              <div className="flex items-center justify-center gap-2 mt-3">
-                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-[10px] font-medium" style={{ color: BRAND.muted }}>Live demo — cycling through real conversations</span>
-              </div>
-            </div>
+          {/* Trust badges */}
+          <div className="flex flex-wrap gap-6 justify-center mt-10 animate-fade-in-up delay-400">
+            {['AI-powered answers', 'Licensed professionals', 'No signup required'].map((t, i) => (
+              <span key={i} className="flex items-center gap-2 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.7)', textShadow: '0 1px 8px rgba(0,0,0,0.2)' }}>
+                <CheckCircle2 size={15} style={{ color: BRAND.accent }} /> {t}
+              </span>
+            ))}
           </div>
         </div>
 
-        {/* Three panels below — Z-Cover, Z-Pro, Z-Find */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-7 items-stretch">
-
-          {/* ─── Z-Cover ─── */}
-          <div className="animate-fade-in-up delay-200">
-            <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: '#EDE9FE' }}>
-                  <Shield size={22} style={{ color: '#7C3AED' }} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
-                    Z-<span style={{ color: '#7C3AED' }}>Cover</span>
-                  </h2>
-                  <p className="text-xs" style={{ color: BRAND.muted }}>Understand your insurance</p>
-                </div>
-              </div>
-
-              <p className="text-sm leading-relaxed mb-5" style={{ color: BRAND.muted }}>
-                Select your insurance plan and get an instant summary of your coverage, deductibles, and copays.
-              </p>
-
-              <select
-                value={selectedCarrier}
-                onChange={(e) => { setSelectedCarrier(e.target.value); setSelectedPlan(''); setPlanSummary(null); }}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition-all appearance-none mb-3"
-                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 16px center' }}
-              >
-                <option value="">Select your carrier</option>
-                {CARRIERS.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-
-              {selectedCarrier && SAMPLE_PLANS[selectedCarrier] && (
-                <select
-                  value={selectedPlan}
-                  onChange={(e) => handlePlanSelect(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition-all appearance-none mb-4"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 16px center' }}
-                >
-                  <option value="">Select your plan</option>
-                  {SAMPLE_PLANS[selectedCarrier].map(p => <option key={p} value={p}>{p}</option>)}
-                </select>
-              )}
-
-              {loadingSummary && (
-                <div className="flex items-center justify-center py-6">
-                  <Loader2 size={20} className="animate-spin" style={{ color: '#7C3AED' }} />
-                </div>
-              )}
-
-              {planSummary && !loadingSummary && (
-                <div className="rounded-2xl p-4 mb-4 text-xs space-y-2 border animate-fade-in" style={{ background: '#F5F3FF', borderColor: '#DDD6FE' }}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style={{ background: '#7C3AED' }}>
-                      {planSummary.tier}
-                    </span>
-                    <span className="font-semibold" style={{ color: BRAND.primary }}>
-                      {selectedCarrier} {selectedPlan}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div><span className="text-gray-400">Covers:</span> <strong className="text-gray-700">{planSummary.coverage}</strong></div>
-                    <div><span className="text-gray-400">Deductible:</span> <strong className="text-gray-700">{planSummary.deductible}</strong></div>
-                    <div><span className="text-gray-400">OOP Max:</span> <strong className="text-gray-700">{planSummary.oopMax}</strong></div>
-                    <div><span className="text-gray-400">Primary:</span> <strong className="text-gray-700">{planSummary.primaryVisit}</strong></div>
-                    <div><span className="text-gray-400">Specialist:</span> <strong className="text-gray-700">{planSummary.specialist}</strong></div>
-                    <div><span className="text-gray-400">Generic Rx:</span> <strong className="text-gray-700">{planSummary.genericRx}</strong></div>
-                  </div>
-                  <p className="text-gray-500 pt-1 italic">{planSummary.bestFor}</p>
-                </div>
-              )}
-
-              {!planSummary && !loadingSummary && !selectedPlan && (
-                <div className="flex-grow flex items-center justify-center py-4">
-                  <p className="text-xs text-center text-gray-300">
-                    Pick a carrier and plan above to see your coverage summary
-                  </p>
-                </div>
-              )}
-
-              <div className="flex-grow" />
-              <button
-                onClick={onOpenChat}
-                className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', color: 'white' }}
-              >
-                <MessageSquare size={16} />
-                Ask Zume About My Plan
-                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-              </button>
-            </div>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 animate-fade-in-up delay-500">
+          <div className="w-6 h-10 rounded-full border-2 flex justify-center pt-2" style={{ borderColor: 'rgba(255,255,255,0.35)' }}>
+            <div className="w-1 h-2.5 rounded-full" style={{ background: BRAND.accent, animation: 'typing-dot 2s ease-in-out infinite' }} />
           </div>
+          <span className="text-[10px] uppercase tracking-widest font-medium" style={{ color: BRAND.muted }}>Explore</span>
+        </div>
+      </section>
 
-          {/* ─── Z-Pro — Human Specialist ─── */}
-          <div className="animate-fade-in-up delay-300">
-            <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: BRAND.warmLight }}>
-                  <Users size={22} style={{ color: BRAND.warm }} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
-                    Z-<span style={{ color: BRAND.warm }}>Pro</span>
-                  </h2>
-                  <p className="text-xs" style={{ color: BRAND.muted }}>Human specialist</p>
-                </div>
-              </div>
+      {/* ═══════════════════════════════════════════
+          PART 2: Panels Section (below the video hero)
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-16 lg:py-20 px-6 lg:px-8" style={{ background: `linear-gradient(180deg, ${BRAND.bg} 0%, #FFFFFF 100%)` }}>
+        <div className="max-w-7xl mx-auto">
 
-              <p className="text-sm leading-relaxed mb-6" style={{ color: BRAND.muted }}>
-                Get connected to an actual healthcare professional who will guide you step by step in navigating your situation and customize it for you.
-              </p>
-
-              <div className="space-y-3.5 mb-8">
-                {[
-                  "We simplify your insurance — helping you understand exactly what's covered",
-                  'Dedicated support for self-employed, unemployed & retirees',
-                  'Matched with the right doctors & specialists for your needs',
-                  'Your personal healthcare concierge — from questions to appointments',
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${BRAND.warm}15` }}>
-                      <CheckCircle2 size={11} style={{ color: BRAND.warm }} />
-                    </div>
-                    <span className="text-xs leading-relaxed" style={{ color: BRAND.muted }}>{item}</span>
+          {/* Zume AI panel — full width */}
+          <div className="mb-7 animate-fade-in-up">
+            <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 bg-white shadow-lg flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
+              {/* Left side — text + examples */}
+              <div className="lg:w-[45%] shrink-0">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: BRAND.accentLight }}>
+                    <Sparkles size={22} style={{ color: BRAND.accent }} />
                   </div>
-                ))}
-              </div>
-
-              <div className="flex-grow" />
-              <button
-                onClick={() => onOpenContact('free-20')}
-                className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                style={{ background: `linear-gradient(135deg, ${BRAND.warm}, #E8941A)`, color: 'white' }}
-              >
-                <Phone size={16} />
-                Free 20-Min Consultation
-                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-              </button>
-
-              <button
-                onClick={() => onOpenContact('paid-60')}
-                className="group w-full mt-3 px-5 py-3.5 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 border-2"
-                style={{ borderColor: BRAND.primary, color: BRAND.primary, background: 'white' }}
-              >
-                <Clock size={16} />
-                Full Hour Session — Only $19.99
-                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-              </button>
-            </div>
-          </div>
-
-          {/* ─── Z-Find — Find Nearby ─── */}
-          <div className="animate-fade-in-up delay-400">
-            <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: '#FEE2E2' }}>
-                  <MapPin size={22} style={{ color: '#DC2626' }} />
+                  <div>
+                    <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
+                      <span style={{ color: BRAND.accent }}>Zume</span>
+                    </h2>
+                    <p className="text-xs" style={{ color: BRAND.muted }}>AI Health Assistant</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
-                    Z-<span style={{ color: '#DC2626' }}>Find</span>
-                  </h2>
-                  <p className="text-xs" style={{ color: BRAND.muted }}>Find care near you</p>
+
+                <p className="text-sm leading-relaxed mb-5" style={{ color: BRAND.muted }}>
+                  Ask anything about healthcare and I can help you with answers.
+                </p>
+
+                {/* Example questions */}
+                <div className="space-y-2 mb-5">
+                  {[
+                    "I lost my job — besides COBRA, what are my options in Texas?",
+                    "I'm self-employed, what's the cheapest health plan for me?",
+                    "My mom is 64 and retiring — when can she get Medicare?",
+                  ].map((q, i) => (
+                    <button
+                      key={i}
+                      onClick={onOpenChat}
+                      className="w-full text-left px-3 py-2.5 rounded-xl bg-gray-50 hover:bg-teal-50 border border-gray-100 hover:border-teal-200 text-xs text-gray-600 hover:text-teal-700 transition-all flex items-start gap-2"
+                    >
+                      <MessageSquare size={12} className="shrink-0 mt-0.5 opacity-40" />
+                      {q}
+                    </button>
+                  ))}
                 </div>
-              </div>
 
-              <p className="text-sm leading-relaxed mb-6" style={{ color: BRAND.muted }}>
-                Quickly locate doctors, urgent care, ERs, and pharmacies in your area.
-              </p>
-
-              <div className="space-y-3 mb-4 flex-grow">
                 <button
                   onClick={onOpenChat}
-                  className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all duration-300 flex items-center gap-4"
+                  className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                  style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)`, color: 'white' }}
                 >
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#EFF6FF' }}>
-                    <Stethoscope size={18} style={{ color: '#3B82F6' }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Find Doctors</p>
-                    <p className="text-xs text-gray-400">Search by specialty & insurance</p>
-                  </div>
-                  <ArrowRight size={14} className="text-gray-300 group-hover:text-blue-400 transition-colors shrink-0" />
+                  <MessageSquare size={16} />
+                  {user ? 'Continue Chatting' : 'Try Zume Now'}
+                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                 </button>
-
-                <a
-                  href="https://www.google.com/maps/search/urgent+care+near+me"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-red-200 hover:bg-red-50/30 transition-all duration-300 flex items-center gap-4"
-                >
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#FEF2F2' }}>
-                    <Activity size={18} style={{ color: '#DC2626' }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Urgent Care / ER</p>
-                    <p className="text-xs text-gray-400">Nearest emergency facilities</p>
-                  </div>
-                  <ArrowRight size={14} className="text-gray-300 group-hover:text-red-400 transition-colors shrink-0" />
-                </a>
-
-                <a
-                  href="https://www.google.com/maps/search/pharmacy+near+me"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-green-200 hover:bg-green-50/30 transition-all duration-300 flex items-center gap-4"
-                >
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#F0FDF4' }}>
-                    <Heart size={18} style={{ color: '#16A34A' }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Pharmacies</p>
-                    <p className="text-xs text-gray-400">CVS, Walgreens & more nearby</p>
-                  </div>
-                  <ArrowRight size={14} className="text-gray-300 group-hover:text-green-400 transition-colors shrink-0" />
-                </a>
-
-                <a
-                  href="https://www.google.com/maps/search/hospital+near+me"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-purple-200 hover:bg-purple-50/30 transition-all duration-300 flex items-center gap-4"
-                >
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#F5F3FF' }}>
-                    <MapPin size={18} style={{ color: '#7C3AED' }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Hospitals</p>
-                    <p className="text-xs text-gray-400">Major hospitals near you</p>
-                  </div>
-                  <ArrowRight size={14} className="text-gray-300 group-hover:text-purple-400 transition-colors shrink-0" />
-                </a>
               </div>
 
-              <p className="text-[10px] text-center text-gray-300">
-                Opens Google Maps with your location
-              </p>
+              {/* Right side — chat demo */}
+              <div className="lg:flex-1 min-w-0">
+                <AnimatedChatDemo variant="compact" />
+                <div className="flex items-center justify-center gap-2 mt-3">
+                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                  <span className="text-[10px] font-medium" style={{ color: BRAND.muted }}>Live demo — cycling through real conversations</span>
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Three panels — Z-Cover, Z-Pro, Z-Find */}
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-7 items-stretch">
+
+            {/* ─── Z-Cover ─── */}
+            <div className="animate-fade-in-up delay-200">
+              <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: '#EDE9FE' }}>
+                    <Shield size={22} style={{ color: '#7C3AED' }} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
+                      Z-<span style={{ color: '#7C3AED' }}>Cover</span>
+                    </h2>
+                    <p className="text-xs" style={{ color: BRAND.muted }}>Understand your insurance</p>
+                  </div>
+                </div>
+
+                <p className="text-sm leading-relaxed mb-5" style={{ color: BRAND.muted }}>
+                  Select your insurance plan and get an instant summary of your coverage, deductibles, and copays.
+                </p>
+
+                <select
+                  value={selectedCarrier}
+                  onChange={(e) => { setSelectedCarrier(e.target.value); setSelectedPlan(''); setPlanSummary(null); }}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition-all appearance-none mb-3"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 16px center' }}
+                >
+                  <option value="">Select your carrier</option>
+                  {CARRIERS.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+
+                {selectedCarrier && SAMPLE_PLANS[selectedCarrier] && (
+                  <select
+                    value={selectedPlan}
+                    onChange={(e) => handlePlanSelect(e.target.value)}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition-all appearance-none mb-4"
+                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 16px center' }}
+                  >
+                    <option value="">Select your plan</option>
+                    {SAMPLE_PLANS[selectedCarrier].map(p => <option key={p} value={p}>{p}</option>)}
+                  </select>
+                )}
+
+                {loadingSummary && (
+                  <div className="flex items-center justify-center py-6">
+                    <Loader2 size={20} className="animate-spin" style={{ color: '#7C3AED' }} />
+                  </div>
+                )}
+
+                {planSummary && !loadingSummary && (
+                  <div className="rounded-2xl p-4 mb-4 text-xs space-y-2 border animate-fade-in" style={{ background: '#F5F3FF', borderColor: '#DDD6FE' }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style={{ background: '#7C3AED' }}>
+                        {planSummary.tier}
+                      </span>
+                      <span className="font-semibold" style={{ color: BRAND.primary }}>
+                        {selectedCarrier} {selectedPlan}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div><span className="text-gray-400">Covers:</span> <strong className="text-gray-700">{planSummary.coverage}</strong></div>
+                      <div><span className="text-gray-400">Deductible:</span> <strong className="text-gray-700">{planSummary.deductible}</strong></div>
+                      <div><span className="text-gray-400">OOP Max:</span> <strong className="text-gray-700">{planSummary.oopMax}</strong></div>
+                      <div><span className="text-gray-400">Primary:</span> <strong className="text-gray-700">{planSummary.primaryVisit}</strong></div>
+                      <div><span className="text-gray-400">Specialist:</span> <strong className="text-gray-700">{planSummary.specialist}</strong></div>
+                      <div><span className="text-gray-400">Generic Rx:</span> <strong className="text-gray-700">{planSummary.genericRx}</strong></div>
+                    </div>
+                    <p className="text-gray-500 pt-1 italic">{planSummary.bestFor}</p>
+                  </div>
+                )}
+
+                {!planSummary && !loadingSummary && !selectedPlan && (
+                  <div className="flex-grow flex items-center justify-center py-4">
+                    <p className="text-xs text-center text-gray-300">
+                      Pick a carrier and plan above to see your coverage summary
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex-grow" />
+                <button
+                  onClick={onOpenChat}
+                  className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                  style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', color: 'white' }}
+                >
+                  <MessageSquare size={16} />
+                  Ask Zume About My Plan
+                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                </button>
+              </div>
+            </div>
+
+            {/* ─── Z-Pro — Human Specialist ─── */}
+            <div className="animate-fade-in-up delay-300">
+              <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: BRAND.warmLight }}>
+                    <Users size={22} style={{ color: BRAND.warm }} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
+                      Z-<span style={{ color: BRAND.warm }}>Pro</span>
+                    </h2>
+                    <p className="text-xs" style={{ color: BRAND.muted }}>Human specialist</p>
+                  </div>
+                </div>
+
+                <p className="text-sm leading-relaxed mb-6" style={{ color: BRAND.muted }}>
+                  Get connected to an actual healthcare professional who will guide you step by step in navigating your situation and customize it for you.
+                </p>
+
+                <div className="space-y-3.5 mb-8">
+                  {[
+                    "We simplify your insurance — helping you understand exactly what's covered",
+                    'Dedicated support for self-employed, unemployed & retirees',
+                    'Matched with the right doctors & specialists for your needs',
+                    'Your personal healthcare concierge — from questions to appointments',
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${BRAND.warm}15` }}>
+                        <CheckCircle2 size={11} style={{ color: BRAND.warm }} />
+                      </div>
+                      <span className="text-xs leading-relaxed" style={{ color: BRAND.muted }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex-grow" />
+                <button
+                  onClick={() => onOpenContact('free-20')}
+                  className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                  style={{ background: `linear-gradient(135deg, ${BRAND.warm}, #E8941A)`, color: 'white' }}
+                >
+                  <Phone size={16} />
+                  Free 20-Min Consultation
+                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                </button>
+
+                <button
+                  onClick={() => onOpenContact('paid-60')}
+                  className="group w-full mt-3 px-5 py-3.5 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 border-2"
+                  style={{ borderColor: BRAND.primary, color: BRAND.primary, background: 'white' }}
+                >
+                  <Clock size={16} />
+                  Full Hour Session — Only $19.99
+                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                </button>
+              </div>
+            </div>
+
+            {/* ─── Z-Find — Find Nearby ─── */}
+            <div className="animate-fade-in-up delay-400">
+              <div className="rounded-3xl p-7 lg:p-8 border border-gray-200/80 h-full bg-white shadow-lg flex flex-col">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: '#FEE2E2' }}>
+                    <MapPin size={22} style={{ color: '#DC2626' }} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-display font-bold" style={{ color: BRAND.primary }}>
+                      Z-<span style={{ color: '#DC2626' }}>Find</span>
+                    </h2>
+                    <p className="text-xs" style={{ color: BRAND.muted }}>Find care near you</p>
+                  </div>
+                </div>
+
+                <p className="text-sm leading-relaxed mb-6" style={{ color: BRAND.muted }}>
+                  Quickly locate doctors, urgent care, ERs, and pharmacies in your area.
+                </p>
+
+                <div className="space-y-3 mb-4 flex-grow">
+                  <button
+                    onClick={onOpenChat}
+                    className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all duration-300 flex items-center gap-4"
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#EFF6FF' }}>
+                      <Stethoscope size={18} style={{ color: '#3B82F6' }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Find Doctors</p>
+                      <p className="text-xs text-gray-400">Search by specialty & insurance</p>
+                    </div>
+                    <ArrowRight size={14} className="text-gray-300 group-hover:text-blue-400 transition-colors shrink-0" />
+                  </button>
+
+                  <a
+                    href="https://www.google.com/maps/search/urgent+care+near+me"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-red-200 hover:bg-red-50/30 transition-all duration-300 flex items-center gap-4"
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#FEF2F2' }}>
+                      <Activity size={18} style={{ color: '#DC2626' }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Urgent Care / ER</p>
+                      <p className="text-xs text-gray-400">Nearest emergency facilities</p>
+                    </div>
+                    <ArrowRight size={14} className="text-gray-300 group-hover:text-red-400 transition-colors shrink-0" />
+                  </a>
+
+                  <a
+                    href="https://www.google.com/maps/search/pharmacy+near+me"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-green-200 hover:bg-green-50/30 transition-all duration-300 flex items-center gap-4"
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#F0FDF4' }}>
+                      <Heart size={18} style={{ color: '#16A34A' }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Pharmacies</p>
+                      <p className="text-xs text-gray-400">CVS, Walgreens & more nearby</p>
+                    </div>
+                    <ArrowRight size={14} className="text-gray-300 group-hover:text-green-400 transition-colors shrink-0" />
+                  </a>
+
+                  <a
+                    href="https://www.google.com/maps/search/hospital+near+me"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group w-full text-left px-4 py-4 rounded-2xl bg-white border-2 border-gray-100 hover:border-purple-200 hover:bg-purple-50/30 transition-all duration-300 flex items-center gap-4"
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#F5F3FF' }}>
+                      <MapPin size={18} style={{ color: '#7C3AED' }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Hospitals</p>
+                      <p className="text-xs text-gray-400">Major hospitals near you</p>
+                    </div>
+                    <ArrowRight size={14} className="text-gray-300 group-hover:text-purple-400 transition-colors shrink-0" />
+                  </a>
+                </div>
+
+                <p className="text-[10px] text-center text-gray-300">
+                  Opens Google Maps with your location
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
-
-/* ════════════════════════════════════════════════════════
-   WELL-BEING JOURNEY (kept but refined)
-   ════════════════════════════════════════════════════════ */
 function WellbeingSection() {
   const cards = [
     { title: 'Self Employed', desc: 'Supporting entrepreneurs navigating emotional, behavioral, and physical well-being challenges unique to self-employment.', icon: <Activity size={24} />, color: '#2AA89A' },

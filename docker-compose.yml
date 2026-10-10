@@ -33,7 +33,7 @@ services:
       - DB_NAME=healthassist
       - DB_USERNAME=healthassist
       - DB_PASSWORD=${DB_PASSWORD:-healthassist123}
-      - CORS_ALLOWED_ORIGINS=https://doctors.sirish.world,http://doctors.sirish.world
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173,https://doctors.sirish.world,https://zumanely.ai,https://www.zumanely.ai
       - CALENDAR_EMAIL=${CALENDAR_EMAIL:-sirish.mandalika@gmail.com}
       - GOOGLE_SA_KEY_PATH=/app/config/service-account.json
       - SMTP_EMAIL=${SMTP_EMAIL:-zumanely0@gmail.com}
@@ -41,6 +41,8 @@ services:
       - NOTIFICATION_CC_EMAIL=${NOTIFICATION_CC_EMAIL:-zumanely0@gmail.com}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_SUCCESS_URL=https://zumanely.ai?payment=success&session_id={CHECKOUT_SESSION_ID}
+      - STRIPE_CANCEL_URL=https://zumanely.ai?payment=cancelled
     volumes:
       - ./healthcare-assistant-backend/config:/app/config:ro
     depends_on:

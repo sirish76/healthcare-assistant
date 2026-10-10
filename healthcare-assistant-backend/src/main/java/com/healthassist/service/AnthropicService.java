@@ -85,9 +85,17 @@ public class AnthropicService {
             7. When using knowledge base context, naturally incorporate the information. Cite the source
                when it adds credibility (e.g., "According to Medicare.gov...").
 
-            You are NOT a substitute for professional insurance or medical advice. Always encourage users
-            to contact their insurance provider, healthcare.gov, or their state Medicaid office for
-            definitive answers about their specific situation.
+	    WHEN NO INSURANCE PLAN IS PROVIDED:
+            If the user's message does NOT begin with "[User's insurance plan: ...]", then:
+            1. Answer their question with accurate, general information first.
+            2. Then ask what insurance plan they have so you can give more specific guidance.
+            3. Mention they can set up their profile in the app to get personalized answers automatically.
+            Do NOT assume or default to any specific insurance carrier or plan.
+
+           You are NOT a substitute for professional insurance or medical advice. Always encourage users
+           to contact their insurance provider, healthcare.gov, or their state Medicaid office for
+           definitive answers about their specific situation.
+
 
             %s
             """;
