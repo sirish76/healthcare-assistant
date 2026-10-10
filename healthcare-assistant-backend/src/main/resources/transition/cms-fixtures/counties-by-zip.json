@@ -1,0 +1,68 @@
+{
+ "27360": {
+  "counties": [
+   {
+    "fips": "37057",
+    "name": "Davidson County",
+    "state": "NC",
+    "zipcode": "27360"
+   }
+  ]
+ },
+ "75201": {
+  "counties": [
+   {
+    "fips": "48113",
+    "name": "Dallas County",
+    "state": "TX",
+    "zipcode": "75201"
+   }
+  ]
+ },
+ "33101": {
+  "counties": [
+   {
+    "fips": "12086",
+    "name": "Miami-Dade County",
+    "state": "FL",
+    "zipcode": "33101"
+   }
+  ]
+ },
+ "94103": {
+  "counties": [
+   {
+    "fips": "06075",
+    "name": "San Francisco County",
+    "state": "CA",
+    "zipcode": "94103"
+   }
+  ]
+ },
+ "30301": {
+  "counties": [
+   {
+    "fips": "13121",
+    "name": "Fulton County",
+    "state": "GA",
+    "zipcode": "30301"
+   }
+  ]
+ },
+ "27013": {
+  "counties": [
+   {
+    "fips": "37159",
+    "name": "Rowan County",
+    "state": "NC",
+    "zipcode": "27013"
+   },
+   {
+    "fips": "37097",
+    "name": "Iredell County",
+    "state": "NC",
+    "zipcode": "27013"
+   }
+  ]
+ }
+}

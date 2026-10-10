@@ -1,0 +1,529 @@
+{
+ "plans": [
+  {
+   "id": "11512NC0100001",
+   "name": "Sample Catastrophic HMO",
+   "premium": 298.1,
+   "metal_level": "Catastrophic",
+   "type": "HMO",
+   "issuer": {
+    "id": "11512",
+    "name": "Sample Health Co"
+   },
+   "deductibles": [
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 10600,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 21200,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 21200,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "moops": [
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 10600,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 21200,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 21200,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "hsa_eligible": false
+  },
+  {
+   "id": "11512NC0100002",
+   "name": "Sample Bronze 7500 HMO",
+   "premium": 371.44,
+   "metal_level": "Bronze",
+   "type": "HMO",
+   "issuer": {
+    "id": "11512",
+    "name": "Sample Health Co"
+   },
+   "deductibles": [
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 7500,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 15000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 15000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "moops": [
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 9800,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 19600,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 19600,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "hsa_eligible": false
+  },
+  {
+   "id": "54332NC0040003",
+   "name": "Example Bronze HSA PPO",
+   "premium": 402.87,
+   "metal_level": "Bronze",
+   "type": "PPO",
+   "issuer": {
+    "id": "54332",
+    "name": "Example Mutual"
+   },
+   "deductibles": [
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 6000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 12000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 12000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "moops": [
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 8050,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 16100,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 16100,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "hsa_eligible": true
+  },
+  {
+   "id": "54332NC0040004",
+   "name": "Example Expanded Bronze EPO",
+   "premium": 389.2,
+   "metal_level": "Expanded Bronze",
+   "type": "EPO",
+   "issuer": {
+    "id": "54332",
+    "name": "Example Mutual"
+   },
+   "deductibles": [
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 5500,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 11000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 11000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "moops": [
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 9200,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 18400,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 18400,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "hsa_eligible": false
+  },
+  {
+   "id": "11512NC0100005",
+   "name": "Sample Silver 4500 HMO",
+   "premium": 489.65,
+   "metal_level": "Silver",
+   "type": "HMO",
+   "issuer": {
+    "id": "11512",
+    "name": "Sample Health Co"
+   },
+   "deductibles": [
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 4500,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 9000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 9000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "moops": [
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 9200,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 18400,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 18400,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "hsa_eligible": false
+  },
+  {
+   "id": "54332NC0040006",
+   "name": "Example Silver PPO",
+   "premium": 512.33,
+   "metal_level": "Silver",
+   "type": "PPO",
+   "issuer": {
+    "id": "54332",
+    "name": "Example Mutual"
+   },
+   "deductibles": [
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 5000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 10000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 10000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "moops": [
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 9000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 18000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 18000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "hsa_eligible": false
+  },
+  {
+   "id": "77788NC0090007",
+   "name": "Demo Silver EPO",
+   "premium": 530.9,
+   "metal_level": "Silver",
+   "type": "EPO",
+   "issuer": {
+    "id": "77788",
+    "name": "Demo Care"
+   },
+   "deductibles": [
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 3800,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 7600,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 7600,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "moops": [
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 8700,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 17400,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 17400,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "hsa_eligible": false
+  },
+  {
+   "id": "11512NC0100008",
+   "name": "Sample Gold 1500 HMO",
+   "premium": 598.12,
+   "metal_level": "Gold",
+   "type": "HMO",
+   "issuer": {
+    "id": "11512",
+    "name": "Sample Health Co"
+   },
+   "deductibles": [
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 1500,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 3000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 3000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "moops": [
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 6500,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 13000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 13000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "hsa_eligible": false
+  },
+  {
+   "id": "54332NC0040009",
+   "name": "Example Gold PPO",
+   "premium": 641.75,
+   "metal_level": "Gold",
+   "type": "PPO",
+   "issuer": {
+    "id": "54332",
+    "name": "Example Mutual"
+   },
+   "deductibles": [
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 1000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 2000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Combined Medical and Drug EHB Deductible",
+     "amount": 2000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "moops": [
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 7000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Individual"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 14000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "In-Network",
+     "family_cost": "Family"
+    },
+    {
+     "type": "Maximum Out of Pocket for Medical and Drug EHB Benefits (Total)",
+     "amount": 14000,
+     "csr": "Exchange variant (no CSR)",
+     "network_tier": "Out-of-Network",
+     "family_cost": "Individual"
+    }
+   ],
+   "hsa_eligible": false
+  }
+ ],
+ "total": 9,
+ "facet_groups": [],
+ "ranges": {}
+}

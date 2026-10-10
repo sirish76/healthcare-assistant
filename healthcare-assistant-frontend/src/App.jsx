@@ -5,6 +5,7 @@ import ContactPage from './components/ContactPage';
 import ProfilePage from './components/ProfilePage';
 import Sidebar from './components/Sidebar';
 import ChatInterface from './components/ChatInterface';
+import TransitionFlow from './components/transition/TransitionFlow';
 import { Menu, X } from 'lucide-react';
 import {
   getConversations,
@@ -13,6 +14,11 @@ import {
   addMessageToConversation,
   deleteConversation as apiDeleteConversation,
 } from './services/api';
+
+// Conversations started from "Ask about my results" are never sent to
+// /api/conversations: they stay in memory only (coverage-transition privacy).
+const EPHEMERAL_PREFIX = 'ephemeral-';
+const isEphemeral = (id) => String(id).startsWith(EPHEMERAL_PREFIX);
 
 function AppContent() {
   const { user } = useAuth();
@@ -160,7 +166,7 @@ function AppContent() {
       );
 
       // Persist new messages to server if user is signed in
-      if (user && conversationId) {
+      if (user && conversationId && !isEphemeral(conversationId)) {
         const existingConv = conversations.find((c) => c.id === conversationId);
         const existingCount = existingConv?.messages?.length || 0;
         const newMessages = messages.slice(existingCount);
@@ -184,7 +190,7 @@ function AppContent() {
 
   const handleDeleteConversation = useCallback(
     async (conversationId) => {
-      if (user) {
+      if (user && !isEphemeral(conversationId)) {
         try {
           await apiDeleteConversation(conversationId);
         } catch (error) {
@@ -222,6 +228,22 @@ function AppContent() {
     setView(page);
     window.scrollTo(0, 0);
   };
+
+  // Opens the chatbot with the coverage-results summary as its first message.
+  const handleAskAboutResults = useCallback((summary) => {
+    const conv = {
+      id: `${EPHEMERAL_PREFIX}${Date.now()}`,
+      title: 'My coverage results',
+      messages: [],
+      createdAt: new Date(),
+      ephemeral: true,
+      initialPrompt: summary,
+    };
+    setConversations((prev) => [conv, ...prev]);
+    setActiveConversationId(conv.id);
+    setView('chat');
+    window.scrollTo(0, 0);
+  }, []);
 
   // Chat view
   if (view === 'chat') {
@@ -288,6 +310,16 @@ function AppContent() {
     );
   }
 
+  // Coverage transition ("Lost your job?") view
+  if (view === 'transition') {
+    return (
+      <TransitionFlow
+        onBack={() => navigate('landing')}
+        onAskAboutResults={handleAskAboutResults}
+      />
+    );
+  }
+
   // Profile page view
   if (view === 'profile') {
     return (
@@ -303,6 +335,7 @@ function AppContent() {
       onOpenChat={() => navigate('chat')}
       onOpenContact={(type) => { setSessionType(type || 'free-20'); navigate('contact'); }}
       onOpenProfile={() => navigate('profile')}
+      onOpenTransition={() => navigate('transition')}
     />
   );
 }

@@ -24,7 +24,8 @@ public class ChatController {
 
     @PostMapping
     public Mono<ResponseEntity<ChatResponse>> chat(@Valid @RequestBody ChatRequest request) {
-        logger.info("Received chat message: " + request.getMessage());
+        // Log size only: messages can contain health, income or coverage details.
+        logger.info("Received chat message (" + request.getMessage().length() + " chars)");
         return chatService.processMessage(request)
                 .map(ResponseEntity::ok);
     }

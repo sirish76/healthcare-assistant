@@ -1,0 +1,494 @@
+{
+  "meta" : {
+    "dataVersion" : "2026-10-10.1",
+    "asOf" : "2026-10-10",
+    "planYear" : 2026,
+    "planYearDataIsExact" : true,
+    "planDataSource" : "FIXTURE",
+    "planDataNote" : null,
+    "pendingReviewValues" : [ "assumptions.annualAllowedSpendPerPerson", "assumptions.coinsuranceByMetal", "assumptions.employerPremiumShare", "assumptions.typicalEmployerPlan", "fplGuidelines.2025.contiguous", "fplGuidelines.2026.contiguous", "planYear2026.applicablePercentages.standard", "planYear2026.employerAffordabilityPercent", "planYear2026.enhancedSubsidiesInEffect", "planYear2026.repaymentCaps", "planYear2027.openEnrollment", "rules.childMaxAge", "rules.chipFallback", "rules.cobraElectionDays", "rules.cobraFirstPaymentDays", "rules.cobraMaxMonthsJobLoss", "rules.cobraNoticeMaxDays", "rules.cobraPremiumMaxPercent", "rules.employerPlanSpecialEnrollmentDays", "rules.marketplaceSepDaysAfter", "rules.marketplaceSepDaysBefore", "rules.marketplaceSubsidyFloorPctFpl", "rules.medicareAge", "rules.medicarePartBSepMonths", "rules.nonExpansionParentScreenPctFpl", "states.NC.chip", "states.NC.exchange", "states.NC.medicaidAdults", "states.NC.medicaidUrl" ]
+  },
+  "location" : {
+    "state" : "NC",
+    "stateName" : "North Carolina",
+    "countyName" : "Davidson County",
+    "exchangeType" : "HEALTHCARE_GOV",
+    "exchangeName" : "HealthCare.gov",
+    "exchangeUrl" : "https://www.healthcare.gov/",
+    "medicaidUrl" : "https://www.healthcare.gov/medicaid-chip/getting-medicaid-chip/"
+  },
+  "household" : {
+    "householdSize" : 3,
+    "peopleNeedingCoverage" : 3,
+    "projectedAnnualIncome" : 102400.0,
+    "incomeYear" : 2026,
+    "annualFplPercent" : 384.24,
+    "subsidyGuidelineYear" : 2025,
+    "currentMonthlyIncome" : 4283.33,
+    "currentMonthlyFplPercent" : 192.87,
+    "medicaidGuidelineYear" : 2026,
+    "coverageEnds" : "2026-09-30",
+    "newCoverageStart" : "2026-10-01",
+    "monthsInPeriod" : 3
+  },
+  "options" : [ {
+    "type" : "COBRA",
+    "label" : "COBRA (keep your old plan)",
+    "availability" : "AVAILABLE",
+    "availabilityReason" : "Available if your employer had 20 or more employees.",
+    "monthlyPremium" : 1850.0,
+    "periodCost" : 7890.0,
+    "twelveMonthCost" : 28200.0,
+    "deductibleCarriesOver" : true,
+    "deductibleRemaining" : 1800,
+    "costBasis" : "Premium from your COBRA notice",
+    "notes" : [ "Same plan, doctors and drug coverage you had before. Lasts up to 18 months." ],
+    "plans" : [ ],
+    "subsidy" : null,
+    "members" : [ ],
+    "handoff" : null
+  }, {
+    "type" : "MARKETPLACE",
+    "label" : "Marketplace plan (HealthCare.gov)",
+    "availability" : "AVAILABLE",
+    "availabilityReason" : "You can enroll because you lost job-based coverage.",
+    "monthlyPremium" : 975.83,
+    "periodCost" : 7427.49,
+    "twelveMonthCost" : 27909.96,
+    "deductibleCarriesOver" : false,
+    "deductibleRemaining" : null,
+    "costBasis" : "Lowest estimated total among 8 plans",
+    "notes" : [ "Deductible starts over at $0 on a new plan." ],
+    "plans" : [ {
+      "id" : "11512NC0100002",
+      "name" : "Sample Bronze 7500 HMO",
+      "issuer" : "Sample Health Co",
+      "metalLevel" : "Bronze",
+      "planType" : "HMO",
+      "monthlyPremium" : 975.83,
+      "monthlyPremiumAfterCredit" : 975.83,
+      "deductible" : 15000.0,
+      "outOfPocketMax" : 19600.0,
+      "periodCost" : 7427.49,
+      "twelveMonthCost" : 27909.96,
+      "drugCoverage" : [ {
+        "id" : "1373463",
+        "name" : "insulin glargine",
+        "status" : "NotCovered"
+      } ],
+      "providerCoverage" : [ {
+        "id" : "1999999902",
+        "name" : "Jordan Example, MD",
+        "status" : "Covered"
+      } ]
+    }, {
+      "id" : "54332NC0040009",
+      "name" : "Example Gold PPO",
+      "issuer" : "Example Mutual",
+      "metalLevel" : "Gold",
+      "planType" : "PPO",
+      "monthlyPremium" : 1685.97,
+      "monthlyPremiumAfterCredit" : 1685.97,
+      "deductible" : 2000.0,
+      "outOfPocketMax" : 14000.0,
+      "periodCost" : 7557.91,
+      "twelveMonthCost" : 25431.64,
+      "drugCoverage" : [ {
+        "id" : "1373463",
+        "name" : "insulin glargine",
+        "status" : "Covered"
+      } ],
+      "providerCoverage" : [ {
+        "id" : "1999999902",
+        "name" : "Jordan Example, MD",
+        "status" : "NotCovered"
+      } ]
+    }, {
+      "id" : "54332NC0040004",
+      "name" : "Example Expanded Bronze EPO",
+      "issuer" : "Example Mutual",
+      "metalLevel" : "Expanded Bronze",
+      "planType" : "EPO",
+      "monthlyPremium" : 1022.49,
+      "monthlyPremiumAfterCredit" : 1022.49,
+      "deductible" : 11000.0,
+      "outOfPocketMax" : 18400.0,
+      "periodCost" : 7567.47,
+      "twelveMonthCost" : 26069.88,
+      "drugCoverage" : [ {
+        "id" : "1373463",
+        "name" : "insulin glargine",
+        "status" : "NotCovered"
+      } ],
+      "providerCoverage" : [ {
+        "id" : "1999999902",
+        "name" : "Jordan Example, MD",
+        "status" : "NotCovered"
+      } ]
+    }, {
+      "id" : "54332NC0040003",
+      "name" : "Example Bronze HSA PPO",
+      "issuer" : "Example Mutual",
+      "metalLevel" : "Bronze",
+      "planType" : "PPO",
+      "monthlyPremium" : 1058.4,
+      "monthlyPremiumAfterCredit" : 1058.4,
+      "deductible" : 12000.0,
+      "outOfPocketMax" : 16100.0,
+      "periodCost" : 7675.2,
+      "twelveMonthCost" : 27100.8,
+      "drugCoverage" : [ {
+        "id" : "1373463",
+        "name" : "insulin glargine",
+        "status" : "NotCovered"
+      } ],
+      "providerCoverage" : [ {
+        "id" : "1999999902",
+        "name" : "Jordan Example, MD",
+        "status" : "NotCovered"
+      } ]
+    }, {
+      "id" : "11512NC0100008",
+      "name" : "Sample Gold 1500 HMO",
+      "issuer" : "Sample Health Co",
+      "metalLevel" : "Gold",
+      "planType" : "HMO",
+      "monthlyPremium" : 1571.35,
+      "monthlyPremiumAfterCredit" : 1571.35,
+      "deductible" : 3000.0,
+      "outOfPocketMax" : 13000.0,
+      "periodCost" : 8014.05,
+      "twelveMonthCost" : 24856.2,
+      "drugCoverage" : [ {
+        "id" : "1373463",
+        "name" : "insulin glargine",
+        "status" : "Covered"
+      } ],
+      "providerCoverage" : [ {
+        "id" : "1999999902",
+        "name" : "Jordan Example, MD",
+        "status" : "Covered"
+      } ]
+    }, {
+      "id" : "11512NC0100005",
+      "name" : "Sample Silver 4500 HMO",
+      "issuer" : "Sample Health Co",
+      "metalLevel" : "Silver",
+      "planType" : "HMO",
+      "monthlyPremium" : 1286.38,
+      "monthlyPremiumAfterCredit" : 1286.38,
+      "deductible" : 9000.0,
+      "outOfPocketMax" : 18400.0,
+      "periodCost" : 8359.14,
+      "twelveMonthCost" : 27136.56,
+      "drugCoverage" : [ {
+        "id" : "1373463",
+        "name" : "insulin glargine",
+        "status" : "Covered"
+      } ],
+      "providerCoverage" : [ {
+        "id" : "1999999902",
+        "name" : "Jordan Example, MD",
+        "status" : "Covered"
+      } ]
+    }, {
+      "id" : "54332NC0040006",
+      "name" : "Example Silver PPO",
+      "issuer" : "Example Mutual",
+      "metalLevel" : "Silver",
+      "planType" : "PPO",
+      "monthlyPremium" : 1345.97,
+      "monthlyPremiumAfterCredit" : 1345.97,
+      "deductible" : 10000.0,
+      "outOfPocketMax" : 18000.0,
+      "periodCost" : 8537.91,
+      "twelveMonthCost" : 28551.64,
+      "drugCoverage" : [ {
+        "id" : "1373463",
+        "name" : "insulin glargine",
+        "status" : "Covered"
+      } ],
+      "providerCoverage" : [ {
+        "id" : "1999999902",
+        "name" : "Jordan Example, MD",
+        "status" : "NotCovered"
+      } ]
+    }, {
+      "id" : "77788NC0090007",
+      "name" : "Demo Silver EPO",
+      "issuer" : "Demo Care",
+      "metalLevel" : "Silver",
+      "planType" : "EPO",
+      "monthlyPremium" : 1394.75,
+      "monthlyPremiumAfterCredit" : 1394.75,
+      "deductible" : 7600.0,
+      "outOfPocketMax" : 17400.0,
+      "periodCost" : 8684.25,
+      "twelveMonthCost" : 27457.0,
+      "drugCoverage" : [ {
+        "id" : "1373463",
+        "name" : "insulin glargine",
+        "status" : "Covered"
+      } ],
+      "providerCoverage" : [ {
+        "id" : "1999999902",
+        "name" : "Jordan Example, MD",
+        "status" : "NotCovered"
+      } ]
+    } ],
+    "subsidy" : {
+      "eligible" : false,
+      "reason" : "an affordable spouse or partner plan is available",
+      "applicablePercent" : 9.96,
+      "maxMonthlyForBenchmark" : null,
+      "benchmarkMonthlyPremium" : 1345.97,
+      "estimatedMonthlyCredit" : null,
+      "enhancedRules" : false
+    },
+    "members" : [ ],
+    "handoff" : null
+  }, {
+    "type" : "MEDICAID_CHIP",
+    "label" : "Medicaid / CHIP",
+    "availability" : "POSSIBLE",
+    "availabilityReason" : "Children often qualify for CHIP at this income, depending on your state's limit.",
+    "monthlyPremium" : 0.0,
+    "periodCost" : null,
+    "twelveMonthCost" : null,
+    "deductibleCarriesOver" : false,
+    "deductibleRemaining" : null,
+    "costBasis" : "Typical: no premium",
+    "notes" : [ "Medicaid and CHIP look at your current monthly income. You can apply any time.", "Likely only for the children in your household. The adults would need another option.", "Usually no premium and very low costs when you get care. Some states charge small CHIP premiums." ],
+    "plans" : [ ],
+    "subsidy" : null,
+    "members" : [ {
+      "memberIndex" : 0,
+      "age" : 41,
+      "group" : "ADULT",
+      "availability" : "UNLIKELY",
+      "reason" : "Income is above your state's Medicaid limit for adults."
+    }, {
+      "memberIndex" : 1,
+      "age" : 39,
+      "group" : "ADULT",
+      "availability" : "UNLIKELY",
+      "reason" : "Income is above your state's Medicaid limit for adults."
+    }, {
+      "memberIndex" : 2,
+      "age" : 8,
+      "group" : "CHILD",
+      "availability" : "POSSIBLE",
+      "reason" : "Children often qualify for CHIP at this income, depending on your state's limit."
+    } ],
+    "handoff" : {
+      "name" : "HealthCare.gov",
+      "url" : "https://www.healthcare.gov/",
+      "reason" : "Apply for Medicaid or CHIP"
+    }
+  }, {
+    "type" : "SPOUSE_PLAN",
+    "label" : "Spouse's or partner's employer plan",
+    "availability" : "AVAILABLE",
+    "availabilityReason" : "Losing your coverage lets you join their plan outside open enrollment.",
+    "monthlyPremium" : 780.0,
+    "periodCost" : 6280.0,
+    "twelveMonthCost" : 16000.0,
+    "deductibleCarriesOver" : false,
+    "deductibleRemaining" : null,
+    "costBasis" : "Monthly cost you entered",
+    "notes" : [ "New plan, so the deductible starts over at $0. Check that your doctors are in its network.", "We used typical employer-plan deductible and out-of-pocket amounts for the missing ones." ],
+    "plans" : [ ],
+    "subsidy" : null,
+    "members" : [ ],
+    "handoff" : null
+  } ],
+  "timeline" : [ {
+    "key" : "COVERAGE_ENDS",
+    "label" : "Your old coverage ends",
+    "windowStart" : null,
+    "date" : "2026-09-30",
+    "estimated" : false,
+    "status" : "PASSED",
+    "daysLeft" : null,
+    "detail" : "The last day your old plan covers you."
+  }, {
+    "key" : "SPOUSE_PLAN",
+    "label" : "Join a spouse's or partner's employer plan",
+    "windowStart" : "2026-09-30",
+    "date" : "2026-10-30",
+    "estimated" : false,
+    "status" : "OPEN",
+    "daysLeft" : 20,
+    "detail" : "Employer plans must give at least 30 days after you lose coverage. Ask their HR; some plans allow longer."
+  }, {
+    "key" : "MARKETPLACE_START",
+    "label" : "Earliest Marketplace coverage start",
+    "windowStart" : null,
+    "date" : "2026-11-01",
+    "estimated" : false,
+    "status" : "UPCOMING",
+    "daysLeft" : 22,
+    "detail" : "Coverage starts the 1st of the month after you pick a plan."
+  }, {
+    "key" : "COBRA_NOTICE",
+    "label" : "COBRA election notice should arrive by",
+    "windowStart" : null,
+    "date" : "2026-11-13",
+    "estimated" : true,
+    "status" : "UPCOMING",
+    "daysLeft" : 34,
+    "detail" : "Your employer has 30 days to tell the plan, and the plan has 14 more to notify you. If it hasn't arrived by then, contact HR or the plan administrator."
+  }, {
+    "key" : "MARKETPLACE_SEP",
+    "label" : "Marketplace special enrollment window",
+    "windowStart" : "2026-08-01",
+    "date" : "2026-11-29",
+    "estimated" : false,
+    "status" : "OPEN",
+    "daysLeft" : 50,
+    "detail" : "You can pick a Marketplace plan from 60 days before to 60 days after your coverage ends."
+  }, {
+    "key" : "OPEN_ENROLLMENT",
+    "label" : "Open enrollment for 2027 coverage",
+    "windowStart" : "2026-11-01",
+    "date" : "2026-12-15",
+    "estimated" : false,
+    "status" : "UPCOMING",
+    "daysLeft" : 66,
+    "detail" : "HealthCare.gov dates. If your state runs its own exchange, its dates may differ."
+  }, {
+    "key" : "COBRA_ELECT",
+    "label" : "Last day to elect COBRA",
+    "windowStart" : "2026-09-30",
+    "date" : "2027-01-12",
+    "estimated" : true,
+    "status" : "OPEN",
+    "daysLeft" : 94,
+    "detail" : "60 days after the notice arrives (or after coverage ends, if later). This date is an estimate until you have the notice."
+  }, {
+    "key" : "COBRA_FIRST_PAYMENT",
+    "label" : "Latest first COBRA payment",
+    "windowStart" : null,
+    "date" : "2027-02-26",
+    "estimated" : true,
+    "status" : "UPCOMING",
+    "daysLeft" : 139,
+    "detail" : "Due 45 days after the day you elect. This is the latest date, if you elect on the last day. The first payment covers every month back to when coverage ended."
+  }, {
+    "key" : "COBRA_MAX_END",
+    "label" : "COBRA would end (maximum 18 months)",
+    "windowStart" : null,
+    "date" : "2028-03-30",
+    "estimated" : false,
+    "status" : "UPCOMING",
+    "daysLeft" : 537,
+    "detail" : "When COBRA runs out, you get a new window to enroll in a Marketplace plan."
+  }, {
+    "key" : "MEDICAID",
+    "label" : "Medicaid / CHIP: apply any time",
+    "windowStart" : null,
+    "date" : null,
+    "estimated" : false,
+    "status" : "ONGOING",
+    "daysLeft" : null,
+    "detail" : "There's no enrollment window. Coverage can start right away, and sometimes it's backdated up to 3 months."
+  } ],
+  "watchOuts" : [ {
+    "key" : "COBRA_DROP_NO_SEP",
+    "severity" : "WARNING",
+    "title" : "Dropping COBRA later won't open a Marketplace window",
+    "body" : "If you choose COBRA and later cancel it or stop paying, you can't switch to a Marketplace plan until open enrollment. Running out of COBRA's full term does open a new window. If a Marketplace plan might be better, decide before your window closes on Nov 29, 2026."
+  }, {
+    "key" : "SPOUSE_PLAN_AFFORDABLE",
+    "severity" : "WARNING",
+    "title" : "The spouse or partner plan blocks Marketplace subsidies",
+    "body" : "Family coverage costs $780 a month. That's at or below 9.96% of household income, which counts as \"affordable.\" Family members who are offered that plan can't get Marketplace subsidies."
+  }, {
+    "key" : "SPOUSE_PLAN_WINDOW",
+    "severity" : "WARNING",
+    "title" : "The window to join a spouse's or partner's plan is short",
+    "body" : "It's usually only 30 days after your coverage ends. Ask their HR right away."
+  }, {
+    "key" : "SAMPLE_PLAN_DATA",
+    "severity" : "WARNING",
+    "title" : "Sample plan data",
+    "body" : "The Marketplace plans shown are sample data for testing, not real prices."
+  }, {
+    "key" : "CHIP_CHILDREN",
+    "severity" : "INFO",
+    "title" : "Your children may qualify even if you don't",
+    "body" : "Children often qualify for Medicaid or CHIP at higher incomes than adults. Families sometimes put children on CHIP and adults on another plan, which can lower total cost."
+  }, {
+    "key" : "DEDUCTIBLE_PROGRESS",
+    "severity" : "INFO",
+    "title" : "COBRA keeps what you've already paid toward your deductible",
+    "body" : "You've met $1,200 of your deductible this year. COBRA keeps that progress. A Marketplace or spouse's plan starts over at zero."
+  }, {
+    "key" : "SHORT_PERIOD",
+    "severity" : "INFO",
+    "title" : "Only 3 months left in the plan year",
+    "body" : "Deductibles on every plan reset January 1, so the advantage of keeping COBRA's deductible progress is short-lived. Plan for open enrollment too."
+  }, {
+    "key" : "INCOME_COUNTS",
+    "severity" : "INFO",
+    "title" : "Severance and unemployment count as income",
+    "body" : "Both count when the Marketplace and Medicaid look at your income."
+  }, {
+    "key" : "SMALL_EMPLOYER_COBRA",
+    "severity" : "INFO",
+    "title" : "COBRA depends on employer size",
+    "body" : "Federal COBRA covers employers with 20 or more employees. If yours was smaller, your state's \"mini-COBRA\" law may apply instead. Check your notice."
+  } ],
+  "nextSteps" : [ {
+    "key" : "APPLY_MEDICAID",
+    "title" : "Apply for Medicaid or CHIP",
+    "body" : "Apply any time. One application on HealthCare.gov checks Medicaid, CHIP and subsidies together. You can also apply directly with your state Medicaid office.",
+    "url" : "https://www.healthcare.gov/",
+    "urlLabel" : "HealthCare.gov",
+    "dueBy" : null
+  }, {
+    "key" : "SPOUSE_PLAN",
+    "title" : "Ask your spouse's or partner's HR about adding your family",
+    "body" : "Losing your coverage lets you join their plan outside open enrollment. Ask for the monthly cost and request enrollment before the deadline.",
+    "url" : null,
+    "urlLabel" : null,
+    "dueBy" : "2026-10-30"
+  }, {
+    "key" : "MARKETPLACE_ENROLL",
+    "title" : "Compare plans and enroll on HealthCare.gov",
+    "body" : "Choose \"lost job-based coverage\" as your reason. Pick a plan by the day your coverage ends to avoid a gap.",
+    "url" : "https://www.healthcare.gov/",
+    "urlLabel" : "HealthCare.gov",
+    "dueBy" : "2026-11-29"
+  }, {
+    "key" : "COBRA_DECIDE",
+    "title" : "Decide whether to elect COBRA",
+    "body" : "Use the election form in your COBRA notice. Coverage is backdated to when your plan ended, so you can wait to decide, but not past the deadline.",
+    "url" : "https://www.dol.gov/general/topic/health-plans/cobra",
+    "urlLabel" : "U.S. Dept. of Labor: COBRA",
+    "dueBy" : "2027-01-12"
+  }, {
+    "key" : "COBRA_PAY",
+    "title" : "If you elect COBRA, make the first payment",
+    "body" : "Due 45 days after you elect. It covers every month back to when your old coverage ended.",
+    "url" : null,
+    "urlLabel" : null,
+    "dueBy" : "2027-02-26"
+  }, {
+    "key" : "DOCUMENTS",
+    "title" : "Keep proof of your coverage loss",
+    "body" : "Save your termination letter, COBRA notice, or a letter from the plan showing the end date. The Marketplace or a spouse's plan may ask for it.",
+    "url" : null,
+    "urlLabel" : null,
+    "dueBy" : null
+  }, {
+    "key" : "REPORT_CHANGES",
+    "title" : "Report income changes after you enroll",
+    "body" : "If you get a new job or your income changes, update HealthCare.gov right away to avoid repaying subsidies.",
+    "url" : "https://www.healthcare.gov/",
+    "urlLabel" : "HealthCare.gov",
+    "dueBy" : null
+  } ],
+  "chatSummary" : "Here are my results from the Zumanely \"Lost your job? Compare your coverage options\" tool. The numbers come from a rules engine, so please explain them rather than recalculating them.\n\n- State: North Carolina (enrollment through HealthCare.gov)\n- People needing coverage: 3 (2 adults, 1 child); household size 3\n- Projected 2026 household income: about 384% of the federal poverty level; current monthly income about 193%\n- Old coverage ends Sep 30, 2026; new coverage could start Oct 1, 2026\n\nOptions (estimated total cost for Oct–Dec 2026):\n- COBRA (keep your old plan): available, $1,850/month, about $7,890 total, keeps deductible progress\n- Marketplace plan (HealthCare.gov): available, $976/month, about $7,427 total, no subsidy (an affordable spouse or partner plan is available)\n- Medicaid / CHIP: possible, $0/month\n- Spouse's or partner's employer plan: available, $780/month, about $6,280 total\n\nKey deadlines:\n- Last day to elect COBRA: Jan 12, 2027 (estimated) [open]\n- Marketplace special enrollment window: Nov 29, 2026 [open]\n- Join a spouse's or partner's employer plan: Oct 30, 2026 [open]\n- Open enrollment for 2027 coverage: Dec 15, 2026 [upcoming]\n\nWatch-outs: Dropping COBRA later won't open a Marketplace window; The spouse or partner plan blocks Marketplace subsidies; The window to join a spouse's or partner's plan is short; Sample plan data\n\nCan you explain these results in plain language and help me decide what to do first?",
+  "disclaimers" : [ "These are estimates, not insurance, tax or legal advice. Confirm prices, eligibility and deadlines on the official site before you decide.", "Medicaid, CHIP and subsidy results are screening estimates. Only the Marketplace or your state Medicaid agency can decide eligibility.", "Your answers are not saved. They are used only to calculate this page." ]
+}

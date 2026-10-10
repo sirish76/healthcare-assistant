@@ -1,0 +1,44 @@
+[
+ {
+  "rxcui": "861007",
+  "name": "metformin",
+  "strength": "500 MG",
+  "route": "Oral Tablet",
+  "full_name": "metformin hydrochloride 500 MG Oral Tablet"
+ },
+ {
+  "rxcui": "314076",
+  "name": "lisinopril",
+  "strength": "10 MG",
+  "route": "Oral Tablet",
+  "full_name": "lisinopril 10 MG Oral Tablet"
+ },
+ {
+  "rxcui": "617314",
+  "name": "atorvastatin",
+  "strength": "10 MG",
+  "route": "Oral Tablet",
+  "full_name": "atorvastatin 10 MG Oral Tablet"
+ },
+ {
+  "rxcui": "966221",
+  "name": "levothyroxine",
+  "strength": "0.05 MG",
+  "route": "Oral Tablet",
+  "full_name": "levothyroxine sodium 0.05 MG Oral Tablet"
+ },
+ {
+  "rxcui": "1373463",
+  "name": "insulin glargine",
+  "strength": "100 UNT/ML",
+  "route": "Pen Injector",
+  "full_name": "insulin glargine 100 UNT/ML Pen Injector"
+ },
+ {
+  "rxcui": "312938",
+  "name": "sertraline",
+  "strength": "50 MG",
+  "route": "Oral Tablet",
+  "full_name": "sertraline 50 MG Oral Tablet"
+ }
+]

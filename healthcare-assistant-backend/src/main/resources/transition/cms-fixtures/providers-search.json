@@ -1,0 +1,47 @@
+{
+ "providers": [
+  {
+   "provider": {
+    "npi": "1999999901",
+    "name": "Sample Family Medicine Clinic",
+    "provider_type": "Facility",
+    "specialties": [
+     "Family Medicine"
+    ]
+   },
+   "address": {
+    "city": "Lexington",
+    "state": "NC"
+   }
+  },
+  {
+   "provider": {
+    "npi": "1999999902",
+    "name": "Jordan Example, MD",
+    "provider_type": "Individual",
+    "specialties": [
+     "Internal Medicine"
+    ]
+   },
+   "address": {
+    "city": "Lexington",
+    "state": "NC"
+   }
+  },
+  {
+   "provider": {
+    "npi": "1999999903",
+    "name": "Riley Sample, DO",
+    "provider_type": "Individual",
+    "specialties": [
+     "Pediatrics"
+    ]
+   },
+   "address": {
+    "city": "Thomasville",
+    "state": "NC"
+   }
+  }
+ ],
+ "total": 3
+}

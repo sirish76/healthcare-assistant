@@ -25,6 +25,8 @@ services:
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - ZOCDOC_API_KEY=${ZOCDOC_API_KEY:-}
+      - CMS_MARKETPLACE_API_KEY=${CMS_MARKETPLACE_API_KEY:-}
+      - CMS_MARKETPLACE_MODE=${CMS_MARKETPLACE_MODE:-auto}
       - CORS_ALLOWED_ORIGINS=https://doctors.sirish.world
       - KNOWLEDGE_SERVICE_URL=http://knowledge:8081
       - DB_HOST=postgres

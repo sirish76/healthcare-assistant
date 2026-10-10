@@ -91,7 +91,7 @@ function ChatInterface({ conversation, onUpdateMessages }) {
       // Prepend insurance plan context if available (from localStorage only)
       const insurancePlan = getLocalInsurancePlan();
       let messageToSend = text;
-      if (insurancePlan && messages.length === 0) {
+      if (insurancePlan && messages.length === 0 && !conversation.ephemeral) {
         // Only add context on first message of conversation
         messageToSend = `[User's insurance plan: ${insurancePlan}]\n\n${text}`;
       }
@@ -136,6 +136,16 @@ function ChatInterface({ conversation, onUpdateMessages }) {
       handleSend();
     }
   };
+
+  // Conversations opened from "Ask about my results" send their summary once.
+  const sentInitialPrompt = useRef({});
+  useEffect(() => {
+    const { id, initialPrompt } = conversation;
+    if (initialPrompt && messages.length === 0 && !sentInitialPrompt.current[id]) {
+      sentInitialPrompt.current[id] = true;
+      handleSend(initialPrompt);
+    }
+  }, [conversation.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isNewConversation = messages.length === 0;
 

@@ -296,7 +296,7 @@ function AnimatedChatDemo({ variant = 'full', className = '' }) {
   );
 }
 
-export default function LandingPage({ onOpenChat, onOpenContact, onOpenProfile }) {
+export default function LandingPage({ onOpenChat, onOpenContact, onOpenProfile, onOpenTransition }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeService, setActiveService] = useState(0);
   const [activeFaq, setActiveFaq] = useState(null);
@@ -306,7 +306,7 @@ export default function LandingPage({ onOpenChat, onOpenContact, onOpenProfile }
     <div className="font-body antialiased" style={{ backgroundColor: BRAND.bg, color: BRAND.text }}>
       <style>{animationStyles}</style>
       <Navbar mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} onOpenChat={onOpenChat} onOpenContact={onOpenContact} onOpenProfile={onOpenProfile} />
-      <HeroSection onOpenContact={onOpenContact} onOpenChat={onOpenChat} />
+      <HeroSection onOpenContact={onOpenContact} onOpenChat={onOpenChat} onOpenTransition={onOpenTransition} />
       <WellbeingSection />
       <ServicesSection active={activeService} setActive={setActiveService} />
       <AdvantageSection />
@@ -523,7 +523,7 @@ function Navbar({ mobileMenuOpen, setMobileMenuOpen, onOpenChat, onOpenContact, 
 /* ════════════════════════════════════════════════════════
    HERO — redesigned layout
    ════════════════════════════════════════════════════════ */
-function HeroSection({ onOpenContact, onOpenChat }) {
+function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
   const { user } = useAuth();
   const [selectedCarrier, setSelectedCarrier] = useState('');
   const [selectedPlan, setSelectedPlan] = useState('');
@@ -670,6 +670,17 @@ function HeroSection({ onOpenContact, onOpenChat }) {
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
           </div>
+
+          {onOpenTransition && (
+            <button
+              onClick={onOpenTransition}
+              className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold underline-offset-4 hover:underline animate-fade-in-up delay-300"
+              style={{ color: '#FFFFFF', textShadow: '0 1px 12px rgba(0,0,0,0.3)' }}
+            >
+              Lost your job? Compare your coverage options
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+            </button>
+          )}
 
           {/* Trust badges */}
           <div className="flex flex-wrap gap-6 justify-center mt-10 animate-fade-in-up delay-400">

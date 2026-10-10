@@ -1,0 +1,71 @@
+# ==============================================================================
+# Plan-year 2027 regulatory values. MOSTLY PLACEHOLDERS: published 2027
+# parameters were not available when this file was written. Every value below
+# carries a TODO. Where unsure, dates are the EARLIER (conservative) option.
+# ==============================================================================
+planYear: 2027
+
+_sources:
+  irs2027: &irs2027
+    effectiveDate: "2027-01-01"
+    sourceUrl: https://www.irs.gov/affordable-care-act/individuals-and-families/questions-and-answers-on-the-premium-tax-credit
+    verified: false
+  cmsOe2027: &cmsOe2027
+    effectiveDate: "2026-11-01"
+    sourceUrl: https://www.healthcare.gov/quick-guide/dates-and-deadlines/
+    verified: false
+  noticeMoop2027: &noticeMoop2027
+    effectiveDate: "2027-01-01"
+    sourceUrl: https://www.cms.gov/marketplace/resources/regulations-guidance
+    verified: false
+
+aptcFplGuidelineYear: 2026
+
+openEnrollment:
+  HEALTHCARE_GOV:
+    <<: *cmsOe2027
+    todo: "The 2025 Marketplace Integrity rule moved the end of open enrollment to Dec 15 starting plan year 2027 (state exchanges must end by Dec 31). Parts of that rule were challenged in court. Confirm the actual 2027 dates; Dec 15 is the conservative choice."
+    value: { start: "2026-11-01", end: "2026-12-15" }
+  stateOverrides: {}
+
+enhancedSubsidiesInEffect:
+  <<: *irs2027
+  todo: "Confirm whether any enhanced credit extension applies to 2027."
+  value: false
+
+applicablePercentages:
+  standard:
+    <<: *irs2027
+    todo: "PLACEHOLDER copied from 2026. Replace with the 2027 IRS Rev. Proc. table."
+    value:
+      - { fromPctFpl: 0,   toPctFpl: 133, startPercent: 2.10, endPercent: 2.10 }
+      - { fromPctFpl: 133, toPctFpl: 150, startPercent: 3.14, endPercent: 4.19 }
+      - { fromPctFpl: 150, toPctFpl: 200, startPercent: 4.19, endPercent: 6.60 }
+      - { fromPctFpl: 200, toPctFpl: 250, startPercent: 6.60, endPercent: 8.44 }
+      - { fromPctFpl: 250, toPctFpl: 300, startPercent: 8.44, endPercent: 9.96 }
+      - { fromPctFpl: 300, toPctFpl: 400, startPercent: 9.96, endPercent: 9.96 }
+  enhanced:
+    <<: *irs2027
+    todo: "Only used if enhancedSubsidiesInEffect is true. Placeholder copied from the 2021–2025 schedule."
+    value:
+      - { fromPctFpl: 0,   toPctFpl: 150,  startPercent: 0.0, endPercent: 0.0 }
+      - { fromPctFpl: 150, toPctFpl: 200,  startPercent: 0.0, endPercent: 2.0 }
+      - { fromPctFpl: 200, toPctFpl: 250,  startPercent: 2.0, endPercent: 4.0 }
+      - { fromPctFpl: 250, toPctFpl: 300,  startPercent: 4.0, endPercent: 6.0 }
+      - { fromPctFpl: 300, toPctFpl: 400,  startPercent: 6.0, endPercent: 8.5 }
+      - { fromPctFpl: 400, toPctFpl: 100000, startPercent: 8.5, endPercent: 8.5 }
+
+employerAffordabilityPercent:
+  <<: *irs2027
+  todo: "PLACEHOLDER copied from 2026 (9.96%). Replace with the 2027 IRS figure."
+  value: 9.96
+
+repaymentCaps:
+  <<: *irs2027
+  todo: "Assumed no repayment cap (same as 2026). Confirm."
+  value: null
+
+maxOutOfPocket:
+  <<: *noticeMoop2027
+  todo: "PLACEHOLDER copied from 2026. Replace with the 2027 NBPP maximum out-of-pocket limits."
+  value: { self: 10600, family: 21200 }

@@ -1,0 +1,94 @@
+{
+ "coverage": [
+  {
+   "plan_id": "11512NC0100001",
+   "npi": "1999999901",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100001",
+   "npi": "1999999902",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100002",
+   "npi": "1999999901",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100002",
+   "npi": "1999999902",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040003",
+   "npi": "1999999901",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040003",
+   "npi": "1999999902",
+   "coverage": "NotCovered"
+  },
+  {
+   "plan_id": "54332NC0040004",
+   "npi": "1999999901",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040004",
+   "npi": "1999999902",
+   "coverage": "NotCovered"
+  },
+  {
+   "plan_id": "11512NC0100005",
+   "npi": "1999999901",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100005",
+   "npi": "1999999902",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040006",
+   "npi": "1999999901",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040006",
+   "npi": "1999999902",
+   "coverage": "NotCovered"
+  },
+  {
+   "plan_id": "77788NC0090007",
+   "npi": "1999999901",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "77788NC0090007",
+   "npi": "1999999902",
+   "coverage": "NotCovered"
+  },
+  {
+   "plan_id": "11512NC0100008",
+   "npi": "1999999901",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100008",
+   "npi": "1999999902",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040009",
+   "npi": "1999999901",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040009",
+   "npi": "1999999902",
+   "coverage": "NotCovered"
+  }
+ ]
+}

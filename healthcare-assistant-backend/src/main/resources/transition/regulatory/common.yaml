@@ -1,0 +1,364 @@
+# ==============================================================================
+# Coverage-transition regulatory data: values that do not depend on plan year.
+#
+# Every value is a "sourced value":
+#   value:          the number / object the rules engine uses
+#   effectiveDate:  date the value took effect (quoted ISO date)
+#   sourceUrl:      where to verify it
+#   verified:       true only after a human has checked it against sourceUrl
+#   todo:           present when the value is uncertain or a placeholder
+#
+# Shared source metadata is declared once as YAML anchors (_sources) and merged
+# into each value with "<<: *anchor". The engine never reads _sources directly.
+#
+# Bump dataVersion whenever any value changes.
+# ==============================================================================
+dataVersion: "2026-10-10.1"
+
+_sources:
+  hhs2025: &hhs2025
+    effectiveDate: "2025-01-15"
+    sourceUrl: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines
+    verified: false
+  hhs2026: &hhs2026
+    effectiveDate: "2026-01-15"
+    sourceUrl: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines
+    verified: false
+    todo: "PLACEHOLDER copied from the 2025 guidelines. Replace with the published 2026 HHS poverty guidelines (used for Medicaid/CHIP in 2026 and for plan-year-2027 subsidies)."
+  dolCobra: &dolCobra
+    effectiveDate: "1986-04-07"
+    sourceUrl: https://www.dol.gov/agencies/ebsa/laws-and-regulations/laws/cobra
+    verified: false
+  dolCobraNotice: &dolCobraNotice
+    effectiveDate: "2004-05-26"
+    sourceUrl: https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XXV/subchapter-L/part-2590/subpart-A/section-2590.606-4
+    verified: false
+  cmsSep: &cmsSep
+    effectiveDate: "2022-01-01"
+    sourceUrl: https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-B/part-155/subpart-E/section-155.420
+    verified: false
+  hipaaSpecial: &hipaaSpecial
+    effectiveDate: "2004-12-30"
+    sourceUrl: https://www.ecfr.gov/current/title-29/subtitle-B/chapter-XXV/subchapter-L/part-2590/subpart-B/section-2590.701-6
+    verified: false
+  medicarePartB: &medicarePartB
+    effectiveDate: "2026-01-01"
+    sourceUrl: https://www.medicare.gov/basics/get-started-with-medicare/sign-up/when-does-medicare-coverage-start
+    verified: false
+  medicaidExpansion: &medicaidExpansion
+    effectiveDate: "2026-01-01"
+    sourceUrl: https://www.kff.org/medicaid/issue-brief/status-of-state-medicaid-expansion-decisions-interactive-map/
+    verified: false
+  chipLimits: &chipLimits
+    effectiveDate: "2026-01-01"
+    sourceUrl: https://www.kff.org/affordable-care-act/state-indicator/medicaid-and-chip-income-eligibility-limits-for-children-as-a-percent-of-the-federal-poverty-level/
+    verified: false
+    todo: "Per-state CHIP upper income limit not loaded yet. Engine falls back to chipFallback ranges. Fill limitPctFpl per state from the source."
+  exchangeList: &exchangeList
+    effectiveDate: "2026-01-01"
+    sourceUrl: https://www.cms.gov/cciio/resources/fact-sheets-and-faqs/state-health-insurance-marketplace-types
+    verified: false
+  medicaidHelp: &medicaidHelp
+    effectiveDate: "2026-01-01"
+    sourceUrl: https://www.medicaid.gov/about-us/where-can-people-get-help-medicaid-chip/index.html
+    verified: false
+    todo: "Generic Medicaid link. Replace with each state's Medicaid application URL."
+  kffEhbs: &kffEhbs
+    effectiveDate: "2025-10-22"
+    sourceUrl: https://www.kff.org/health-costs/report/2025-employer-health-benefits-survey/
+    verified: false
+  heuristic: &heuristic
+    effectiveDate: "2026-10-10"
+    sourceUrl: https://meps.ahrq.gov/mepsweb/data_stats/quick_tables.jsp
+    verified: false
+    todo: "Modeling assumption, not a regulation. Review the numbers and adjust."
+
+# ------------------------------------------------------------------------------
+# Federal poverty guidelines, keyed by guideline year.
+# Marketplace subsidies for plan year N use guideline year N-1.
+# Medicaid/CHIP use the guideline year that is current on the application date.
+# ------------------------------------------------------------------------------
+fplGuidelines:
+  "2025":
+    contiguous: { <<: *hhs2025, value: { firstPerson: 15650, eachAdditional: 5500 } }
+    AK:         { <<: *hhs2025, value: { firstPerson: 19550, eachAdditional: 6880 } }
+    HI:         { <<: *hhs2025, value: { firstPerson: 17990, eachAdditional: 6330 } }
+  "2026":
+    contiguous: { <<: *hhs2026, value: { firstPerson: 15650, eachAdditional: 5500 } }
+    AK:         { <<: *hhs2026, value: { firstPerson: 19550, eachAdditional: 6880 } }
+    HI:         { <<: *hhs2026, value: { firstPerson: 17990, eachAdditional: 6330 } }
+
+# ------------------------------------------------------------------------------
+# Federal timing and threshold rules (not plan-year specific)
+# ------------------------------------------------------------------------------
+rules:
+  cobraElectionDays:            { <<: *dolCobra, value: 60 }
+  cobraFirstPaymentDays:        { <<: *dolCobra, value: 45 }
+  cobraMaxMonthsJobLoss:        { <<: *dolCobra, value: 18 }
+  cobraPremiumMaxPercent:       { <<: *dolCobra, value: 102 }
+  # Employer has 30 days to notify the plan administrator, who then has 14 days
+  # to notify the employee (44 days when the employer is also the administrator).
+  cobraNoticeMaxDays:           { <<: *dolCobraNotice, value: 44 }
+  marketplaceSepDaysBefore:     { <<: *cmsSep, value: 60 }
+  marketplaceSepDaysAfter:
+    <<: *cmsSep
+    value: 60
+    todo: "Counted from the last day of coverage. If CMS counts from the day after, the real window is one day longer; this value is the conservative reading."
+  employerPlanSpecialEnrollmentDays:
+    <<: *hipaaSpecial
+    value: 30
+    todo: "30 days is the legal minimum; some employer plans allow longer. Counted from the last day of coverage (conservative)."
+  medicarePartBSepMonths:       { <<: *medicarePartB, value: 8 }
+  medicareAge:                  { <<: *medicarePartB, value: 65 }
+  medicaidExpansionLimitPctFpl: { <<: *medicaidExpansion, value: 138 }
+  marketplaceSubsidyFloorPctFpl:
+    <<: *cmsSep
+    sourceUrl: https://www.healthcare.gov/lower-costs/
+    value: 100
+  childMaxAge:
+    <<: *chipLimits
+    todo: null
+    value: 18
+  chipFallback:
+    <<: *chipLimits
+    todo: "All states cover children to at least ~175% FPL; most go much higher. 'likely' and 'possible' bands are conservative placeholders until per-state limits are filled in."
+    value: { likelyBelowPctFpl: 175, possibleBelowPctFpl: 300 }
+  # Screening threshold for parents in non-expansion states without a statewide
+  # adult program. Real parent limits are lower in most of those states.
+  nonExpansionParentScreenPctFpl:
+    <<: *medicaidExpansion
+    todo: "Heuristic: parents at or below this % FPL are shown as 'possible – check your state'. Replace with per-state parent limits."
+    value: 100
+
+# ------------------------------------------------------------------------------
+# Cost-model assumptions. These are estimates, not regulations.
+# ------------------------------------------------------------------------------
+assumptions:
+  # Share of the total premium that employers typically pay. Used only to
+  # estimate a COBRA premium from an old paycheck deduction.
+  employerPremiumShare:
+    <<: *kffEhbs
+    value: { single: 0.84, family: 0.75 }
+    todo: "Approximate KFF averages. Confirm against the latest Employer Health Benefits Survey."
+  # Expected annual allowed medical spending per covered person, by usage level.
+  annualAllowedSpendPerPerson:
+    <<: *heuristic
+    value: { LOW: 1000, MODERATE: 6000, HIGH: 25000 }
+  # Coinsurance assumed after the deductible, by metal level.
+  coinsuranceByMetal:
+    <<: *heuristic
+    value: { Catastrophic: 0.0, Bronze: 0.40, "Expanded Bronze": 0.40, Silver: 0.30, Gold: 0.20, Platinum: 0.10, EMPLOYER: 0.20 }
+  # Used when the person doesn't know their old plan's deductible / out-of-pocket max.
+  typicalEmployerPlan:
+    <<: *kffEhbs
+    value: { deductibleSingle: 1900, deductibleFamily: 3800, oopMaxSingle: 5000, oopMaxFamily: 10000 }
+    todo: "Rough averages for employer plans. Verify against the latest KFF survey."
+
+# ------------------------------------------------------------------------------
+# States. exchange.type: HEALTHCARE_GOV or STATE (own enrollment platform).
+# medicaidAdults.expanded: ACA expansion to 138% FPL.
+# For non-expansion states adultLimitPctFpl is null unless a statewide adult
+# program exists. Parent-only limits in those states are very low and vary.
+# ------------------------------------------------------------------------------
+_hcgov: &hcgov
+  <<: *exchangeList
+  value: { type: HEALTHCARE_GOV, name: HealthCare.gov, url: "https://www.healthcare.gov/" }
+_expanded: &expanded
+  <<: *medicaidExpansion
+  value: { expanded: true, adultLimitPctFpl: 138 }
+_notExpanded: &notExpanded
+  <<: *medicaidExpansion
+  todo: "Non-expansion state: adults without children generally ineligible; parent limits are very low and vary. Add parent limit if needed."
+  value: { expanded: false, adultLimitPctFpl: null }
+_chipUnknown: &chipUnknown
+  <<: *chipLimits
+  value: { limitPctFpl: null }
+_medicaidUrl: &medicaidUrl
+  <<: *medicaidHelp
+  value: "https://www.healthcare.gov/medicaid-chip/getting-medicaid-chip/"
+
+states:
+  AL: { name: Alabama, exchange: *hcgov, medicaidAdults: *notExpanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  AK: { name: Alaska, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  AZ: { name: Arizona, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  AR: { name: Arkansas, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  CA:
+    name: California
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Covered California, url: "https://www.coveredca.com/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  CO:
+    name: Colorado
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Connect for Health Colorado, url: "https://connectforhealthco.com/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  CT:
+    name: Connecticut
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Access Health CT, url: "https://www.accesshealthct.com/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  DE: { name: Delaware, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  DC:
+    name: District of Columbia
+    exchange: { <<: *exchangeList, value: { type: STATE, name: DC Health Link, url: "https://dchealthlink.com/" } }
+    medicaidAdults:
+      <<: *medicaidExpansion
+      todo: "DC covers adults above 138% FPL; confirm current limit."
+      value: { expanded: true, adultLimitPctFpl: 138 }
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  FL: { name: Florida, exchange: *hcgov, medicaidAdults: *notExpanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  GA:
+    name: Georgia
+    exchange:
+      <<: *exchangeList
+      todo: "Georgia Access became a state-based exchange for plan year 2025; confirm."
+      value: { type: STATE, name: Georgia Access, url: "https://georgiaaccess.gov/" }
+    medicaidAdults:
+      <<: *medicaidExpansion
+      todo: "Georgia Pathways covers adults to 100% FPL with a work/activity requirement; confirm status."
+      value: { expanded: false, adultLimitPctFpl: 100 }
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  HI: { name: Hawaii, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  ID:
+    name: Idaho
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Your Health Idaho, url: "https://www.yourhealthidaho.org/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  IL:
+    name: Illinois
+    exchange:
+      <<: *exchangeList
+      todo: "Get Covered Illinois moved to its own platform for plan year 2026; confirm."
+      value: { type: STATE, name: Get Covered Illinois, url: "https://getcovered.illinois.gov/" }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  IN: { name: Indiana, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  IA: { name: Iowa, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  KS: { name: Kansas, exchange: *hcgov, medicaidAdults: *notExpanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  KY:
+    name: Kentucky
+    exchange: { <<: *exchangeList, value: { type: STATE, name: kynect, url: "https://kynect.ky.gov/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  LA: { name: Louisiana, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  ME:
+    name: Maine
+    exchange: { <<: *exchangeList, value: { type: STATE, name: CoverME.gov, url: "https://www.coverme.gov/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  MD:
+    name: Maryland
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Maryland Health Connection, url: "https://www.marylandhealthconnection.gov/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  MA:
+    name: Massachusetts
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Massachusetts Health Connector, url: "https://www.mahealthconnector.org/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  MI: { name: Michigan, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  MN:
+    name: Minnesota
+    exchange: { <<: *exchangeList, value: { type: STATE, name: MNsure, url: "https://www.mnsure.org/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  MS: { name: Mississippi, exchange: *hcgov, medicaidAdults: *notExpanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  MO: { name: Missouri, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  MT: { name: Montana, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  NE: { name: Nebraska, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  NV:
+    name: Nevada
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Nevada Health Link, url: "https://www.nevadahealthlink.com/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  NH: { name: New Hampshire, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  NJ:
+    name: New Jersey
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Get Covered New Jersey, url: "https://nj.gov/getcoverednj/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  NM:
+    name: New Mexico
+    exchange: { <<: *exchangeList, value: { type: STATE, name: beWellnm, url: "https://www.bewellnm.com/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  NY:
+    name: New York
+    exchange: { <<: *exchangeList, value: { type: STATE, name: NY State of Health, url: "https://nystateofhealth.ny.gov/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  NC: { name: North Carolina, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  ND: { name: North Dakota, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  OH: { name: Ohio, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  OK: { name: Oklahoma, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  OR:
+    name: Oregon
+    exchange:
+      <<: *exchangeList
+      todo: "Oregon enrolls through HealthCare.gov for 2026 but planned its own platform later; confirm for plan year 2027."
+      value: { type: HEALTHCARE_GOV, name: HealthCare.gov, url: "https://www.healthcare.gov/" }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  PA:
+    name: Pennsylvania
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Pennie, url: "https://pennie.com/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  RI:
+    name: Rhode Island
+    exchange: { <<: *exchangeList, value: { type: STATE, name: HealthSource RI, url: "https://healthsourceri.com/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  SC: { name: South Carolina, exchange: *hcgov, medicaidAdults: *notExpanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  SD: { name: South Dakota, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  TN: { name: Tennessee, exchange: *hcgov, medicaidAdults: *notExpanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  TX: { name: Texas, exchange: *hcgov, medicaidAdults: *notExpanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  UT: { name: Utah, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  VT:
+    name: Vermont
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Vermont Health Connect, url: "https://vermonthealthconnect.gov/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  VA:
+    name: Virginia
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Virginia's Insurance Marketplace, url: "https://marketplace.virginia.gov/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  WA:
+    name: Washington
+    exchange: { <<: *exchangeList, value: { type: STATE, name: Washington Healthplanfinder, url: "https://www.wahealthplanfinder.org/" } }
+    medicaidAdults: *expanded
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  WV: { name: West Virginia, exchange: *hcgov, medicaidAdults: *expanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }
+  WI:
+    name: Wisconsin
+    exchange: *hcgov
+    medicaidAdults:
+      <<: *medicaidExpansion
+      todo: null
+      value: { expanded: false, adultLimitPctFpl: 100 }
+    chip: *chipUnknown
+    medicaidUrl: *medicaidUrl
+  WY: { name: Wyoming, exchange: *hcgov, medicaidAdults: *notExpanded, chip: *chipUnknown, medicaidUrl: *medicaidUrl }

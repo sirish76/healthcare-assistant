@@ -1,0 +1,274 @@
+{
+ "coverage": [
+  {
+   "plan_id": "11512NC0100001",
+   "rxcui": "861007",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100001",
+   "rxcui": "314076",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100001",
+   "rxcui": "617314",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100001",
+   "rxcui": "966221",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100001",
+   "rxcui": "312938",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100001",
+   "rxcui": "1373463",
+   "coverage": "NotCovered"
+  },
+  {
+   "plan_id": "11512NC0100002",
+   "rxcui": "861007",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100002",
+   "rxcui": "314076",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100002",
+   "rxcui": "617314",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100002",
+   "rxcui": "966221",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100002",
+   "rxcui": "312938",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100002",
+   "rxcui": "1373463",
+   "coverage": "NotCovered"
+  },
+  {
+   "plan_id": "54332NC0040003",
+   "rxcui": "861007",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040003",
+   "rxcui": "314076",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040003",
+   "rxcui": "617314",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040003",
+   "rxcui": "966221",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040003",
+   "rxcui": "312938",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040003",
+   "rxcui": "1373463",
+   "coverage": "NotCovered"
+  },
+  {
+   "plan_id": "54332NC0040004",
+   "rxcui": "861007",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040004",
+   "rxcui": "314076",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040004",
+   "rxcui": "617314",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040004",
+   "rxcui": "966221",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040004",
+   "rxcui": "312938",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040004",
+   "rxcui": "1373463",
+   "coverage": "NotCovered"
+  },
+  {
+   "plan_id": "11512NC0100005",
+   "rxcui": "861007",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100005",
+   "rxcui": "314076",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100005",
+   "rxcui": "617314",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100005",
+   "rxcui": "966221",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100005",
+   "rxcui": "312938",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100005",
+   "rxcui": "1373463",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040006",
+   "rxcui": "861007",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040006",
+   "rxcui": "314076",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040006",
+   "rxcui": "617314",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040006",
+   "rxcui": "966221",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040006",
+   "rxcui": "312938",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040006",
+   "rxcui": "1373463",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "77788NC0090007",
+   "rxcui": "861007",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "77788NC0090007",
+   "rxcui": "314076",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "77788NC0090007",
+   "rxcui": "617314",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "77788NC0090007",
+   "rxcui": "966221",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "77788NC0090007",
+   "rxcui": "312938",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "77788NC0090007",
+   "rxcui": "1373463",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100008",
+   "rxcui": "861007",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100008",
+   "rxcui": "314076",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100008",
+   "rxcui": "617314",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100008",
+   "rxcui": "966221",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100008",
+   "rxcui": "312938",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "11512NC0100008",
+   "rxcui": "1373463",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040009",
+   "rxcui": "861007",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040009",
+   "rxcui": "314076",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040009",
+   "rxcui": "617314",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040009",
+   "rxcui": "966221",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040009",
+   "rxcui": "312938",
+   "coverage": "Covered"
+  },
+  {
+   "plan_id": "54332NC0040009",
+   "rxcui": "1373463",
+   "coverage": "Covered"
+  }
+ ]
+}

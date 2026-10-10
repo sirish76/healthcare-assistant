@@ -27,6 +27,8 @@ services:
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - ZOCDOC_API_KEY=${ZOCDOC_API_KEY:-}
+      - CMS_MARKETPLACE_API_KEY=${CMS_MARKETPLACE_API_KEY:-}
+      - CMS_MARKETPLACE_MODE=${CMS_MARKETPLACE_MODE:-auto}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-1045121225058-evthv0bogs2i0k5l015a04eoig1ltsnp.apps.googleusercontent.com}
       - DB_HOST=postgres
       - DB_PORT=5432

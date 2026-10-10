@@ -1,0 +1,89 @@
+# ==============================================================================
+# Plan-year 2026 regulatory values (Marketplace coverage Jan 1 – Dec 31, 2026).
+# Same sourced-value format as common.yaml.
+# ==============================================================================
+planYear: 2026
+
+_sources:
+  irs2026: &irs2026
+    effectiveDate: "2026-01-01"
+    sourceUrl: https://www.irs.gov/pub/irs-drop/rp-25-25.pdf
+    verified: false
+  cmsOe2026: &cmsOe2026
+    effectiveDate: "2025-11-01"
+    sourceUrl: https://www.healthcare.gov/quick-guide/dates-and-deadlines/
+    verified: false
+  obbba: &obbba
+    effectiveDate: "2026-01-01"
+    sourceUrl: https://www.congress.gov/bill/119th-congress/house-bill/1
+    verified: false
+  noticeMoop2026: &noticeMoop2026
+    effectiveDate: "2026-01-01"
+    sourceUrl: https://www.cms.gov/files/document/2026-papi-parameters-guidance.pdf
+    verified: false
+
+# Marketplace subsidies for plan year 2026 use the 2025 poverty guidelines.
+aptcFplGuidelineYear: 2025
+
+openEnrollment:
+  HEALTHCARE_GOV: { <<: *cmsOe2026, value: { start: "2025-11-01", end: "2026-01-15" } }
+  # States with their own exchange may set different dates. Only states listed
+  # here are overridden; others fall back to HEALTHCARE_GOV dates.
+  stateOverrides:
+    CA:
+      <<: *cmsOe2026
+      sourceUrl: https://www.coveredca.com/
+      todo: "Covered California has historically run open enrollment to Jan 31; confirm for 2026."
+      value: { start: "2025-11-01", end: "2026-01-31" }
+
+# Did the enhanced (ARPA/IRA) premium tax credits get extended into 2026?
+# false = original ACA table, subsidy ends above 400% FPL.
+enhancedSubsidiesInEffect:
+  <<: *irs2026
+  todo: "Enhanced credits were scheduled to expire after 2025. Confirm no extension was enacted for 2026; if one was, set to true and verify the enhanced table below."
+  value: false
+
+# Required contribution (% of income) toward the benchmark silver plan.
+# Linear interpolation from startPercent to endPercent across [fromPctFpl, toPctFpl).
+applicablePercentages:
+  standard:
+    <<: *irs2026
+    todo: "From Rev. Proc. 2025-25 as remembered (2.10%–9.96%). Verify every band against the source."
+    value:
+      - { fromPctFpl: 0,   toPctFpl: 133, startPercent: 2.10, endPercent: 2.10 }
+      - { fromPctFpl: 133, toPctFpl: 150, startPercent: 3.14, endPercent: 4.19 }
+      - { fromPctFpl: 150, toPctFpl: 200, startPercent: 4.19, endPercent: 6.60 }
+      - { fromPctFpl: 200, toPctFpl: 250, startPercent: 6.60, endPercent: 8.44 }
+      - { fromPctFpl: 250, toPctFpl: 300, startPercent: 8.44, endPercent: 9.96 }
+      - { fromPctFpl: 300, toPctFpl: 400, startPercent: 9.96, endPercent: 9.96 }
+  enhanced:
+    <<: *irs2026
+    sourceUrl: https://www.irs.gov/affordable-care-act/individuals-and-families/questions-and-answers-on-the-premium-tax-credit
+    todo: "Only used if enhancedSubsidiesInEffect is true. This is the 2021–2025 ARPA/IRA schedule; an extension could change it."
+    value:
+      - { fromPctFpl: 0,   toPctFpl: 150,  startPercent: 0.0, endPercent: 0.0 }
+      - { fromPctFpl: 150, toPctFpl: 200,  startPercent: 0.0, endPercent: 2.0 }
+      - { fromPctFpl: 200, toPctFpl: 250,  startPercent: 2.0, endPercent: 4.0 }
+      - { fromPctFpl: 250, toPctFpl: 300,  startPercent: 4.0, endPercent: 6.0 }
+      - { fromPctFpl: 300, toPctFpl: 400,  startPercent: 6.0, endPercent: 8.5 }
+      - { fromPctFpl: 400, toPctFpl: 100000, startPercent: 8.5, endPercent: 8.5 }
+
+# Employer coverage is "affordable" (blocks subsidies) if the required
+# contribution is at or below this percent of household income.
+employerAffordabilityPercent:
+  <<: *irs2026
+  todo: "Believed to be 9.96% for 2026. Verify."
+  value: 9.96
+
+# Excess advance premium tax credit repayment caps.
+# null = no cap (full repayment of any excess).
+repaymentCaps:
+  <<: *obbba
+  todo: "The 2025 reconciliation law removed repayment caps starting tax year 2026. Confirm."
+  value: null
+
+# Maximum in-network out-of-pocket limit for Marketplace plans.
+maxOutOfPocket:
+  <<: *noticeMoop2026
+  todo: "Believed to be $10,600 self-only / $21,200 family for 2026. Verify."
+  value: { self: 10600, family: 21200 }
