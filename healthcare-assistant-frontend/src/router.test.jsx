@@ -50,5 +50,8 @@ describe('router', () => {
     expect(legacyRedirect('/', '?payment=success&session_id=cs_1', '')).toBeNull();
     expect(legacyRedirect('/', '?payment=cancelled', '')).toBeNull();
     expect(legacyRedirect('/', '', '#faq')).toBeNull();
+    expect(legacyRedirect('/app', '', '')).toBe('/');
+    expect(legacyRedirect('/app/compare', '?x=1', '')).toBe('/compare?x=1');
+    expect(legacyRedirect('/application', '', '')).toBeNull();
   });
 });

@@ -64,6 +64,8 @@ const LEGACY_HASHES = { '#about': '/more#about', '#services': '/more#services', 
  */
 export function legacyRedirect(path, search, hash) {
   if (path === '/transition') return `/compare${search}${hash}`;
+  // zumanely.ai used to serve the app under /app behind a static landing page.
+  if (path === '/app' || path.startsWith('/app/')) return `${path.slice(4) || '/'}${search}${hash}`;
   if (path === '/' && LEGACY_HASHES[hash]) return LEGACY_HASHES[hash];
   return null;
 }
