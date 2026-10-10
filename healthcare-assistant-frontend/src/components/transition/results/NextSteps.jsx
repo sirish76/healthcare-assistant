@@ -17,7 +17,7 @@ export default function NextSteps({ steps }) {
                    className="w-4 h-4 mt-1 accent-teal-600 shrink-0" />
             <div className="min-w-0">
               <label htmlFor={`step-${s.key}`} className="text-sm font-semibold cursor-pointer"
-                     style={{ color: done[s.key] ? '#94A3B8' : BRAND.text, textDecoration: done[s.key] ? 'line-through' : 'none' }}>
+                     style={{ color: done[s.key] ? '#64748B' : BRAND.text, textDecoration: done[s.key] ? 'line-through' : 'none' }}>
                 {s.title}
               </label>
               {s.dueBy && <span className="ml-2 text-xs font-semibold" style={{ color: '#B45309' }}>by {shortDate(s.dueBy)}</span>}

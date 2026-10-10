@@ -141,7 +141,8 @@ function Sidebar({
                 e.stopPropagation();
                 onDeleteConversation(conv.id);
               }}
-              className="opacity-0 group-hover:opacity-100 p-1 hover:bg-white/10 rounded transition-all"
+              aria-label="Delete conversation"
+              className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 hover:bg-white/10 rounded transition-all"
             >
               <Trash2 size={13} />
             </button>

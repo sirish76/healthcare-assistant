@@ -1,12 +1,21 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef, Suspense, lazy } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import LandingPage from './components/LandingPage';
-import ContactPage from './components/ContactPage';
-import ProfilePage from './components/ProfilePage';
-import Sidebar from './components/Sidebar';
-import ChatInterface from './components/ChatInterface';
-import TransitionFlow from './components/transition/TransitionFlow';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Loader2 } from 'lucide-react';
+import { useLocation, navigate, legacyRedirect, Link } from './router';
+import { BRAND } from './theme';
+import SiteHeader from './components/layout/SiteHeader';
+import SiteFooter from './components/layout/SiteFooter';
+import HomePage from './components/home/HomePage';
+import ChatLauncher from './components/chat/ChatLauncher';
+import ChatDrawer from './components/chat/ChatDrawer';
+
+// Everything except the home page is code-split so phones download less up front.
+const TransitionFlow = lazy(() => import('./components/transition/TransitionFlow'));
+const MoreWaysPage = lazy(() => import('./components/more/MoreWaysPage'));
+const ContactPage = lazy(() => import('./components/ContactPage'));
+const ProfilePage = lazy(() => import('./components/ProfilePage'));
+const ChatInterface = lazy(() => import('./components/ChatInterface'));
+const Sidebar = lazy(() => import('./components/Sidebar'));
 import {
   getConversations,
   getConversation as fetchConversation,
@@ -22,8 +31,6 @@ const isEphemeral = (id) => String(id).startsWith(EPHEMERAL_PREFIX);
 
 function AppContent() {
   const { user } = useAuth();
-  const [view, setView] = useState('landing');
-  const [sessionType, setSessionType] = useState('free-20'); // 'free-20' or 'paid-60'
   const [conversations, setConversations] = useState([
     { id: 'default', title: 'New Conversation', messages: [], createdAt: new Date() },
   ]);
@@ -224,12 +231,35 @@ function AppContent() {
     [activeConversationId, user, handleNewConversation]
   );
 
-  const navigate = (page) => {
-    setView(page);
-    window.scrollTo(0, 0);
-  };
+  const { path, query, hash } = useLocation();
+  const [chatOpen, setChatOpen] = useState(false);
+  const [stickyCtaVisible, setStickyCtaVisible] = useState(false);
+  const mainRef = useRef(null);
+  const firstRender = useRef(true);
 
-  // Opens the chatbot with the coverage-results summary as its first message.
+  // Old URLs: /transition and the anchors of the former single-page landing.
+  useEffect(() => {
+    const to = legacyRedirect(path, window.location.search, hash);
+    if (to) navigate(to, { replace: true });
+  }, [path, hash]);
+
+  // On navigation: scroll to the anchor (or top) and move focus to the main content.
+  useEffect(() => {
+    document.title = PAGE_TITLES[path] || 'Zumanely';
+    if (hash) {
+      scrollToHash(hash);
+    } else if (!firstRender.current) {
+      window.scrollTo(0, 0);
+      mainRef.current?.focus({ preventScroll: true });
+    }
+    firstRender.current = false;
+  }, [path, hash]);
+
+  const openChat = useCallback(() => setChatOpen(true), []);
+  const closeChat = useCallback(() => setChatOpen(false), []);
+
+  // "Ask about my results": opens the chat panel in place, with the results
+  // summary as the first message of a conversation that is never saved.
   const handleAskAboutResults = useCallback((summary) => {
     const conv = {
       id: `${EPHEMERAL_PREFIX}${Date.now()}`,
@@ -241,102 +271,168 @@ function AppContent() {
     };
     setConversations((prev) => [conv, ...prev]);
     setActiveConversationId(conv.id);
-    setView('chat');
-    window.scrollTo(0, 0);
+    setChatOpen(true);
   }, []);
 
-  // Chat view
-  if (view === 'chat') {
+  const openContact = useCallback((type) => navigate(type === 'paid-60' ? '/contact?type=paid-60' : '/contact'), []);
+  const updateActive = useCallback(
+    (messages) => activeConversation && handleUpdateConversation(activeConversation.id, messages),
+    [activeConversation, handleUpdateConversation]
+  );
+
+  // Full-screen chat
+  if (path === '/chat') {
     return (
       <div className="flex h-screen bg-gray-50">
         <button
+          type="button"
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors"
+          aria-label={sidebarOpen ? 'Hide conversations' : 'Show conversations'}
+          aria-expanded={sidebarOpen}
+          className="fixed top-3 left-3 z-50 lg:hidden w-11 h-11 flex items-center justify-center bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors"
         >
-          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          {sidebarOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
         </button>
 
-        <button
-          onClick={() => navigate('landing')}
-          className="fixed top-4 right-4 z-50 px-4 py-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
+        <Link
+          to="/"
+          className="fixed top-3 right-3 z-50 inline-flex items-center min-h-[44px] px-4 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
         >
           ← Back to Home
-        </button>
+        </Link>
 
-        <div
-          className={`${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } fixed lg:relative lg:translate-x-0 z-40 transition-transform duration-300 ease-in-out`}
-        >
-          <Sidebar
-            conversations={conversations}
-            activeConversationId={activeConversationId}
-            onSelectConversation={handleSelectConversation}
-            onNewConversation={handleNewConversation}
-            onDeleteConversation={handleDeleteConversation}
-          />
-        </div>
-
-        {sidebarOpen && (
+        <Suspense fallback={<PageLoading />}>
           <div
-            className="fixed inset-0 bg-black/20 z-30 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
+            className={`${
+              sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            } fixed lg:relative lg:translate-x-0 z-40 transition-transform duration-300 ease-in-out`}
+          >
+            <Sidebar
+              conversations={conversations}
+              activeConversationId={activeConversationId}
+              onSelectConversation={handleSelectConversation}
+              onNewConversation={handleNewConversation}
+              onDeleteConversation={handleDeleteConversation}
+            />
+          </div>
 
-        <main className="flex-1 flex flex-col min-w-0">
-          {activeConversation && (
-            <ChatInterface
-              conversation={activeConversation}
-              onUpdateMessages={(messages) =>
-                handleUpdateConversation(activeConversation.id, messages)
-              }
+          {sidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/20 z-30 lg:hidden"
+              aria-hidden="true"
+              onClick={() => setSidebarOpen(false)}
             />
           )}
-        </main>
+
+          <main className="flex-1 flex flex-col min-w-0">
+            {activeConversation && (
+              <ChatInterface
+                key={activeConversation.id}
+                conversation={activeConversation}
+                onUpdateMessages={updateActive}
+              />
+            )}
+          </main>
+        </Suspense>
       </div>
     );
   }
 
-  // Contact page view
-  if (view === 'contact') {
-    return (
-      <ContactPage
-        onBack={() => navigate('landing')}
-        onOpenChat={() => navigate('chat')}
-        user={user}
-        sessionType={sessionType}
-      />
-    );
+  let page;
+  switch (path) {
+    case '/':
+      page = <HomePage paymentStatus={query.get('payment')} onOpenChat={openChat} onStickyCtaChange={setStickyCtaVisible} />;
+      break;
+    case '/compare':
+    case '/transition':
+      page = <TransitionFlow onBack={() => navigate('/')} onAskAboutResults={handleAskAboutResults} />;
+      break;
+    case '/more':
+      page = <MoreWaysPage onOpenChat={openChat} onOpenContact={openContact} />;
+      break;
+    case '/contact':
+      page = (
+        <ContactPage
+          onBack={() => navigate('/')}
+          onOpenChat={openChat}
+          user={user}
+          sessionType={query.get('type') === 'paid-60' ? 'paid-60' : 'free-20'}
+        />
+      );
+      break;
+    case '/profile':
+      page = <ProfilePage onBack={() => navigate('/')} />;
+      break;
+    default:
+      page = <NotFound />;
   }
 
-  // Coverage transition ("Lost your job?") view
-  if (view === 'transition') {
-    return (
-      <TransitionFlow
-        onBack={() => navigate('landing')}
-        onAskAboutResults={handleAskAboutResults}
-      />
-    );
-  }
-
-  // Profile page view
-  if (view === 'profile') {
-    return (
-      <ProfilePage
-        onBack={() => navigate('landing')}
-      />
-    );
-  }
-
-  // Landing page view
   return (
-    <LandingPage
-      onOpenChat={() => navigate('chat')}
-      onOpenContact={(type) => { setSessionType(type || 'free-20'); navigate('contact'); }}
-      onOpenProfile={() => navigate('profile')}
-      onOpenTransition={() => navigate('transition')}
-    />
+    <div className="min-h-screen flex flex-col" style={{ background: BRAND.bg }}>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:px-4 focus:py-3 focus:rounded-lg focus:bg-white focus:shadow-lg focus:font-semibold"
+        style={{ color: BRAND.primary }}
+      >
+        Skip to main content
+      </a>
+      <SiteHeader onOpenChat={openChat} />
+      <main id="main" ref={mainRef} tabIndex={-1} className="flex-1 focus:outline-none">
+        <Suspense fallback={<PageLoading />}>{page}</Suspense>
+      </main>
+      <SiteFooter />
+      <ChatLauncher onOpen={openChat} raised={stickyCtaVisible} hidden={chatOpen} />
+      <ChatDrawer
+        open={chatOpen}
+        onClose={closeChat}
+        conversation={activeConversation}
+        onUpdateMessages={updateActive}
+        onNewConversation={handleNewConversation}
+      />
+    </div>
+  );
+}
+
+const PAGE_TITLES = {
+  '/': 'Zumanely: compare your health coverage options after a job loss',
+  '/compare': 'Compare your coverage options | Zumanely',
+  '/transition': 'Compare your coverage options | Zumanely',
+  '/chat': 'Ask Zume | Zumanely',
+  '/more': 'More ways we help | Zumanely',
+  '/contact': 'Talk to a person | Zumanely',
+  '/profile': 'Your profile | Zumanely',
+};
+
+/** Scrolls to an in-page anchor, retrying briefly while a lazy page renders. */
+function scrollToHash(hash, attempt = 0) {
+  const el = document.getElementById(decodeURIComponent(hash.slice(1)));
+  if (el) {
+    el.scrollIntoView({ block: 'start' });
+    if (el.id !== 'main') return;
+    el.focus?.({ preventScroll: true });
+    return;
+  }
+  if (attempt < 20) setTimeout(() => scrollToHash(hash, attempt + 1), 50);
+}
+
+function PageLoading() {
+  return (
+    <div className="flex justify-center py-24">
+      <Loader2 className="animate-spin text-gray-500" aria-label="Loading" />
+    </div>
+  );
+}
+
+function NotFound() {
+  return (
+    <div className="max-w-xl mx-auto px-4 py-24 text-center">
+      <h1 className="text-2xl font-bold" style={{ color: BRAND.primary }}>We couldn’t find that page</h1>
+      <p className="mt-3 text-slate-700">
+        <Link to="/" className="font-semibold underline" style={{ color: BRAND.accent }}>Go to the home page</Link>
+        {' '}or{' '}
+        <Link to="/compare" className="font-semibold underline" style={{ color: BRAND.accent }}>compare your coverage options</Link>.
+      </p>
+    </div>
   );
 }
 

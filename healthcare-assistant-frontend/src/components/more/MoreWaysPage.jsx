@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { Link } from '../../router';
 import {
   Phone,
   Mail,
@@ -32,7 +33,8 @@ import {
 /* ─────────────────── colour tokens ─────────────────── */
 const BRAND = {
   primary: '#1B3A5C',
-  accent: '#2AA89A',
+  accent: '#17766C', // was #2AA89A; darkened for WCAG AA text contrast on light backgrounds
+  accentOnDark: '#5EEAD4', // teal for text on the navy/video backgrounds
   accentLight: '#E6F7F5',
   warm: '#F9A826',
   warmLight: '#FFF8EB',
@@ -274,9 +276,9 @@ function AnimatedChatDemo({ variant = 'full', className = '' }) {
           </div>
           <div><p className={`font-semibold ${compact?'text-xs':'text-sm'}`} style={{color:BRAND.primary}}>Zume</p><p className={`${compact?'text-[10px]':'text-xs'} text-green-500 font-medium`}>● Live demo</p></div>
         </div>
-        {!compact && <div className="flex items-center gap-1.5">{DEMO_CONVERSATIONS.map((c,i)=><button key={i} onClick={()=>startConversation(i)} className={`px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${convoIdx===i?'text-white':'text-gray-400 hover:text-gray-600 hover:bg-gray-50'}`} style={convoIdx===i?{background:BRAND.accent}:{}}>{c.label}</button>)}</div>}
+        {!compact && <div className="flex items-center gap-1.5">{DEMO_CONVERSATIONS.map((c,i)=><button key={i} onClick={()=>startConversation(i)} className={`px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${convoIdx===i?'text-white':'text-gray-500 hover:text-gray-600 hover:bg-gray-50'}`} style={convoIdx===i?{background:BRAND.accent}:{}}>{c.label}</button>)}</div>}
       </div>
-      {compact && <div className="px-4 py-2 bg-gray-50/50 border-b border-gray-50 flex items-center justify-between"><span className="text-[10px] font-medium text-gray-400">{currentConvo.label}</span><div className="flex gap-1">{DEMO_CONVERSATIONS.map((_,i)=><div key={i} className="h-1 rounded-full transition-all duration-500" style={{width:i===convoIdx?'14px':'4px',background:i===convoIdx?BRAND.accent:'#CBD5E1'}}/>)}</div></div>}
+      {compact && <div className="px-4 py-2 bg-gray-50/50 border-b border-gray-50 flex items-center justify-between"><span className="text-[10px] font-medium text-gray-500">{currentConvo.label}</span><div className="flex gap-1">{DEMO_CONVERSATIONS.map((_,i)=><div key={i} className="h-1 rounded-full transition-all duration-500" style={{width:i===convoIdx?'14px':'4px',background:i===convoIdx?BRAND.accent:'#CBD5E1'}}/>)}</div></div>}
       <div className={`${compact?'h-[260px] p-3':'h-[340px] p-5'} overflow-y-auto space-y-3 scrollbar-hide`} style={{background:'linear-gradient(180deg,white,#FAFBFD)'}}>
         <div className="flex gap-2 animate-msg-appear">
           <div className={`${compact?'w-6 h-6':'w-7 h-7'} rounded-lg flex items-center justify-center shrink-0 mt-0.5`} style={{background:`linear-gradient(135deg,${BRAND.accent},${BRAND.primary})`}}><Sparkles size={compact?10:12} className="text-white"/></div>
@@ -288,7 +290,7 @@ function AnimatedChatDemo({ variant = 'full', className = '' }) {
       </div>
       <div className={`${compact?'px-3 py-2.5':'px-5 py-3.5'} border-t border-gray-50`}>
         <div className={`flex items-center gap-2 bg-gray-50 ${compact?'rounded-xl px-3 py-2':'rounded-2xl px-4 py-3'} border border-gray-100`}>
-          <span className={`text-gray-400 flex-1 ${compact?'text-[10px]':'text-sm'}`}>Ask about healthcare, insurance...</span>
+          <span className={`text-gray-500 flex-1 ${compact?'text-[10px]':'text-sm'}`}>Ask about healthcare, insurance...</span>
           <div className={`${compact?'w-6 h-6':'w-8 h-8'} rounded-lg flex items-center justify-center`} style={{background:`linear-gradient(135deg,${BRAND.accent},${BRAND.primary})`}}><ArrowRight size={compact?10:13} className="text-white"/></div>
         </div>
       </div>
@@ -296,21 +298,22 @@ function AnimatedChatDemo({ variant = 'full', className = '' }) {
   );
 }
 
-export default function LandingPage({ onOpenChat, onOpenContact, onOpenProfile, onOpenTransition }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+/**
+ * "More ways we help": the broader Zumanely content (care coordination,
+ * caregiver support, patient advocacy, plan insights, find care) that used to
+ * be the landing page. The site header and chat launcher come from App.
+ */
+export default function MoreWaysPage({ onOpenChat, onOpenContact }) {
   const [activeService, setActiveService] = useState(0);
   const [activeFaq, setActiveFaq] = useState(null);
-  const [testimonialIdx, setTestimonialIdx] = useState(0);
 
   return (
     <div className="font-body antialiased" style={{ backgroundColor: BRAND.bg, color: BRAND.text }}>
       <style>{animationStyles}</style>
-      <Navbar mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} onOpenChat={onOpenChat} onOpenContact={onOpenContact} onOpenProfile={onOpenProfile} />
-      <HeroSection onOpenContact={onOpenContact} onOpenChat={onOpenChat} onOpenTransition={onOpenTransition} />
+      <HeroSection onOpenContact={onOpenContact} onOpenChat={onOpenChat} />
       <WellbeingSection />
       <ServicesSection active={activeService} setActive={setActiveService} />
       <AdvantageSection />
-      <TestimonialsSection idx={testimonialIdx} setIdx={setTestimonialIdx} />
       <FAQSection active={activeFaq} setActive={setActiveFaq} />
       <Footer />
     </div>
@@ -318,212 +321,24 @@ export default function LandingPage({ onOpenChat, onOpenContact, onOpenProfile, 
 }
 
 /* ════════════════════════════════════════════════════════
-   USER MENU
-   ════════════════════════════════════════════════════════ */
-function UserMenu({ scrolled, isMobile = false, onOpenProfile }) {
-  const { user, signIn, signOut, loading } = useAuth();
-  const [signingIn, setSigningIn] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const handleSignIn = async () => {
-    try {
-      setSigningIn(true);
-      await signIn();
-    } catch (err) {
-      console.error('Sign-in failed:', err);
-    } finally {
-      setSigningIn(false);
-    }
-  };
-
-  if (loading) return null;
-
-  if (user) {
-    return (
-      <div className="relative">
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className={`flex items-center gap-2.5 px-3 py-2 rounded-full transition-all duration-200 ${
-            isMobile
-              ? 'text-gray-700 hover:bg-gray-50 w-full'
-              : scrolled
-                ? 'text-gray-700 hover:bg-gray-50'
-                : 'text-white/90 hover:bg-white/10'
-          }`}
-        >
-          {user.pictureUrl ? (
-            <img src={user.pictureUrl} alt="" className="w-8 h-8 rounded-full ring-2 ring-white/20" referrerPolicy="no-referrer" />
-          ) : (
-            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: BRAND.accent }}>
-              <User size={16} className="text-white" />
-            </div>
-          )}
-          <span className="text-sm font-medium truncate max-w-[120px]">
-            {user.name || user.email}
-          </span>
-          <ChevronDown size={14} className="opacity-60" />
-        </button>
-
-        {menuOpen && (
-          <>
-            <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-            <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-2xl border border-gray-100/80 py-1.5 z-50 animate-fade-in" style={{ backdropFilter: 'blur(12px)' }}>
-              <div className="px-4 py-3 border-b border-gray-100">
-                <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
-                <p className="text-xs text-gray-500 truncate mt-0.5">{user.email}</p>
-              </div>
-              <button
-                onClick={() => { setMenuOpen(false); onOpenProfile && onOpenProfile(); }}
-                className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2.5 transition-colors"
-              >
-                <User size={14} /> My Profile
-              </button>
-              <button
-                onClick={() => { setMenuOpen(false); signOut(); }}
-                className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2.5 rounded-b-2xl transition-colors"
-              >
-                <LogOut size={14} /> Sign Out
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <button
-      onClick={handleSignIn}
-      disabled={signingIn}
-      className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-        isMobile
-          ? 'text-gray-700 hover:bg-gray-50 w-full justify-center border border-gray-200'
-          : scrolled
-            ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border border-gray-200'
-            : 'text-white/90 border border-white/25 hover:bg-white/10 hover:border-white/40'
-      } ${signingIn ? 'opacity-50 cursor-wait' : ''}`}
-    >
-      {signingIn ? (
-        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-      ) : (
-        <svg width="16" height="16" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-      )}
-      {signingIn ? 'Signing in...' : 'Sign in'}
-    </button>
-  );
-}
-
-/* ════════════════════════════════════════════════════════
-   NAVBAR
-   ════════════════════════════════════════════════════════ */
-function Navbar({ mobileMenuOpen, setMobileMenuOpen, onOpenChat, onOpenContact, onOpenProfile }) {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handler);
-    return () => window.removeEventListener('scroll', handler);
-  }, []);
-
-  const links = [
-    { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
-    { label: 'Services', href: '#services' },
-    { label: 'AI Assistant', href: '#home' },
-    { label: 'Contact', href: '#contact' },
-  ];
-
-  return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'bg-white/90 backdrop-blur-xl shadow-sm' : 'bg-white/70 backdrop-blur-sm'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Main nav */}
-        <div className="flex items-center justify-between py-4">
-          <a href="#home" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105" style={{ background: `linear-gradient(135deg, ${BRAND.accent}, ${BRAND.primary})` }}>
-              <Heart size={22} className="text-white" />
-            </div>
-            <div>
-              <span className={`text-3xl font-bold tracking-tight font-display text-gray-900`} style={{ color: BRAND.primary }}>
-                Zumanely
-              </span>
-              <p className={`text-[10px] tracking-wide uppercase ${'text-gray-400'}`}>
-                Holistic Wellness
-              </p>
-            </div>
-          </a>
-
-          {/* Desktop links */}
-          <div className="hidden lg:flex items-center gap-1">
-            {links.map((l) => (
-              <a
-                key={l.label}
-                href={l.href}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-100`}
-              >
-                {l.label}
-              </a>
-            ))}
-            <div className="ml-2 pl-3 border-l" style={{ borderColor: BRAND.border }}>
-              <UserMenu scrolled={scrolled} onOpenProfile={onOpenProfile} />
-            </div>
-            <button
-              onClick={onOpenContact}
-              className="ml-3 px-6 py-2.5 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:shadow-lg hover:-translate-y-px"
-              style={{ background: `linear-gradient(135deg, ${BRAND.accent}, ${BRAND.primary})` }}
-            >
-              Get Started
-            </button>
-          </div>
-
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 rounded-xl hover:bg-white/10 transition-colors">
-            {mobileMenuOpen ? <X size={22} className={'text-gray-700'} /> : <Menu size={22} className={'text-gray-700'} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden bg-white/95 backdrop-blur-xl shadow-xl border-t border-gray-100 animate-fade-in">
-          <div className="px-6 py-5 space-y-1">
-            {links.map((l) => (
-              <a
-                key={l.label}
-                href={l.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 font-medium text-sm transition-colors"
-              >
-                {l.label}
-              </a>
-            ))}
-            <div className="pt-4 border-t border-gray-100 space-y-3">
-              <UserMenu scrolled={true} isMobile={true} onOpenProfile={onOpenProfile} />
-              <button
-                onClick={() => { setMobileMenuOpen(false); onOpenContact(); }}
-                className="w-full px-5 py-3 rounded-full text-sm font-semibold text-white"
-                style={{ background: `linear-gradient(135deg, ${BRAND.accent}, ${BRAND.primary})` }}
-              >
-                Get Started
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </nav>
-  );
-}
-
-/* ════════════════════════════════════════════════════════
    HERO — redesigned layout
    ════════════════════════════════════════════════════════ */
-function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
+/** Background video only on wide screens and when the visitor hasn't asked for reduced motion. */
+function useDesktopVideo() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return;
+    const mq = window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)');
+    const update = () => setShow(mq.matches);
+    update();
+    mq.addEventListener?.('change', update);
+    return () => mq.removeEventListener?.('change', update);
+  }, []);
+  return show;
+}
+
+function HeroSection({ onOpenContact, onOpenChat }) {
+  const showVideo = useDesktopVideo();
   const { user } = useAuth();
   const [selectedCarrier, setSelectedCarrier] = useState('');
   const [selectedPlan, setSelectedPlan] = useState('');
@@ -616,33 +431,36 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
           ═══════════════════════════════════════════ */}
       <section
         id="home"
-        className="relative flex items-center justify-center overflow-hidden" style={{minHeight: "100vh"}}
+        className="relative flex items-center justify-center overflow-hidden" style={{ minHeight: '70vh', background: `linear-gradient(160deg, ${BRAND.primary} 0%, #134E5E 100%)` }}
       >
-        {/* Background video */}
-        <div className="hero-video-wrap">
-          <video
-            className="hero-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            onLoadedData={(e) => e.target.classList.add('loaded')}
-          >
-            <source src="/hero-bg.mp4?v=2" type="video/mp4" />
-          </video>
+        {/* Background video: desktop only, not downloaded on phones */}
+        <div className="hero-video-wrap" aria-hidden="true">
+          {showVideo && (
+            <video
+              className="hero-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              onLoadedData={(e) => e.target.classList.add('loaded')}
+            >
+              <source src="/hero-bg.mp4?v=2" type="video/mp4" />
+            </video>
+          )}
           <div className="hero-video-overlay" />
         </div>
 
         {/* Hero text content — centered over video */}
-        <div className="relative z-10 text-left max-w-2xl px-6 lg:px-16 pt-24">
+        <div className="relative z-10 text-left max-w-2xl px-6 lg:px-16 py-16">
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full mb-8 animate-fade-in-up" style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(12px)' }}>
             <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: BRAND.accent }} />
-            <span className="text-sm font-semibold" style={{ color: BRAND.accent }}>AI-Powered Healthcare Assistant</span>
+            <span className="text-sm font-semibold" style={{ color: BRAND.accentOnDark }}>More ways we help</span>
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 animate-fade-in-up delay-100" style={{ color: '#FFFFFF', textShadow: '0 2px 30px rgba(0,0,0,0.3)' }}>
             Care Led by Experts,{' '}
-            <span style={{ color: BRAND.accent }}>Powered by AI</span>
+            <span style={{ color: BRAND.accentOnDark }}>Powered by AI</span>
           </h1>
 
           <p className="text-lg md:text-xl leading-relaxed mb-10 animate-fade-in-up delay-200 font-body" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 12px rgba(0,0,0,0.2)' }}>
@@ -654,7 +472,7 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
             <button
               onClick={onOpenChat}
               className="group px-8 py-4 rounded-full text-base font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 flex items-center justify-center gap-2.5"
-              style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)`, color: 'white' }}
+              style={{ background: `linear-gradient(135deg, ${BRAND.accent}, ${BRAND.primary})`, color: 'white' }}
             >
               <MessageSquare size={20} />
               {user ? 'Continue Chatting' : 'Talk to Zume AI'}
@@ -671,22 +489,20 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
             </button>
           </div>
 
-          {onOpenTransition && (
-            <button
-              onClick={onOpenTransition}
-              className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold underline-offset-4 hover:underline animate-fade-in-up delay-300"
-              style={{ color: '#FFFFFF', textShadow: '0 1px 12px rgba(0,0,0,0.3)' }}
-            >
-              Lost your job? Compare your coverage options
-              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-            </button>
-          )}
+          <Link
+            to="/compare"
+            className="group mt-6 inline-flex items-center gap-2 min-h-[44px] text-sm font-semibold underline-offset-4 hover:underline animate-fade-in-up delay-300"
+            style={{ color: '#FFFFFF', textShadow: '0 1px 12px rgba(0,0,0,0.3)' }}
+          >
+            Lost your job? Compare your coverage options
+            <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+          </Link>
 
           {/* Trust badges */}
           <div className="flex flex-wrap gap-6 justify-center mt-10 animate-fade-in-up delay-400">
             {['AI-powered answers', 'Licensed professionals', 'No signup required'].map((t, i) => (
               <span key={i} className="flex items-center gap-2 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.7)', textShadow: '0 1px 8px rgba(0,0,0,0.2)' }}>
-                <CheckCircle2 size={15} style={{ color: BRAND.accent }} /> {t}
+                <CheckCircle2 size={15} style={{ color: BRAND.accentOnDark }} /> {t}
               </span>
             ))}
           </div>
@@ -749,7 +565,7 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
                 <button
                   onClick={onOpenChat}
                   className="group w-full px-5 py-3.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                  style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)`, color: 'white' }}
+                  style={{ background: `linear-gradient(135deg, ${BRAND.accent}, ${BRAND.primary})`, color: 'white' }}
                 >
                   <MessageSquare size={16} />
                   {user ? 'Continue Chatting' : 'Try Zume Now'}
@@ -791,6 +607,7 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
                 </p>
 
                 <select
+                  aria-label="Insurance carrier"
                   value={selectedCarrier}
                   onChange={(e) => { setSelectedCarrier(e.target.value); setSelectedPlan(''); setPlanSummary(null); }}
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition-all appearance-none mb-3"
@@ -802,6 +619,7 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
 
                 {selectedCarrier && SAMPLE_PLANS[selectedCarrier] && (
                   <select
+                    aria-label="Plan"
                     value={selectedPlan}
                     onChange={(e) => handlePlanSelect(e.target.value)}
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition-all appearance-none mb-4"
@@ -829,12 +647,12 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
-                      <div><span className="text-gray-400">Covers:</span> <strong className="text-gray-700">{planSummary.coverage}</strong></div>
-                      <div><span className="text-gray-400">Deductible:</span> <strong className="text-gray-700">{planSummary.deductible}</strong></div>
-                      <div><span className="text-gray-400">OOP Max:</span> <strong className="text-gray-700">{planSummary.oopMax}</strong></div>
-                      <div><span className="text-gray-400">Primary:</span> <strong className="text-gray-700">{planSummary.primaryVisit}</strong></div>
-                      <div><span className="text-gray-400">Specialist:</span> <strong className="text-gray-700">{planSummary.specialist}</strong></div>
-                      <div><span className="text-gray-400">Generic Rx:</span> <strong className="text-gray-700">{planSummary.genericRx}</strong></div>
+                      <div><span className="text-gray-500">Covers:</span> <strong className="text-gray-700">{planSummary.coverage}</strong></div>
+                      <div><span className="text-gray-500">Deductible:</span> <strong className="text-gray-700">{planSummary.deductible}</strong></div>
+                      <div><span className="text-gray-500">OOP Max:</span> <strong className="text-gray-700">{planSummary.oopMax}</strong></div>
+                      <div><span className="text-gray-500">Primary:</span> <strong className="text-gray-700">{planSummary.primaryVisit}</strong></div>
+                      <div><span className="text-gray-500">Specialist:</span> <strong className="text-gray-700">{planSummary.specialist}</strong></div>
+                      <div><span className="text-gray-500">Generic Rx:</span> <strong className="text-gray-700">{planSummary.genericRx}</strong></div>
                     </div>
                     <p className="text-gray-500 pt-1 italic">{planSummary.bestFor}</p>
                   </div>
@@ -948,7 +766,7 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Find Doctors</p>
-                      <p className="text-xs text-gray-400">Search by specialty & insurance</p>
+                      <p className="text-xs text-gray-500">Search by specialty & insurance</p>
                     </div>
                     <ArrowRight size={14} className="text-gray-300 group-hover:text-blue-400 transition-colors shrink-0" />
                   </button>
@@ -964,7 +782,7 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Urgent Care / ER</p>
-                      <p className="text-xs text-gray-400">Nearest emergency facilities</p>
+                      <p className="text-xs text-gray-500">Nearest emergency facilities</p>
                     </div>
                     <ArrowRight size={14} className="text-gray-300 group-hover:text-red-400 transition-colors shrink-0" />
                   </a>
@@ -980,7 +798,7 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Pharmacies</p>
-                      <p className="text-xs text-gray-400">CVS, Walgreens & more nearby</p>
+                      <p className="text-xs text-gray-500">CVS, Walgreens & more nearby</p>
                     </div>
                     <ArrowRight size={14} className="text-gray-300 group-hover:text-green-400 transition-colors shrink-0" />
                   </a>
@@ -996,7 +814,7 @@ function HeroSection({ onOpenContact, onOpenChat, onOpenTransition }) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold" style={{ color: BRAND.primary }}>Hospitals</p>
-                      <p className="text-xs text-gray-400">Major hospitals near you</p>
+                      <p className="text-xs text-gray-500">Major hospitals near you</p>
                     </div>
                     <ArrowRight size={14} className="text-gray-300 group-hover:text-purple-400 transition-colors shrink-0" />
                   </a>
@@ -1108,7 +926,7 @@ function AIChatSection({ onOpenChat }) {
             <button
               onClick={onOpenChat}
               className="group px-7 py-4 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2.5"
-              style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)`, color: 'white' }}
+              style={{ background: `linear-gradient(135deg, ${BRAND.accent}, ${BRAND.primary})`, color: 'white' }}
             >
               <MessageSquare size={18} />
               Start a Conversation
@@ -1193,7 +1011,7 @@ function AdvantageSection() {
     <section className="py-28 px-6 lg:px-8" style={{ background: BRAND.primary }}>
       <div className="max-w-7xl mx-auto">
         <div className="max-w-2xl mx-auto text-center mb-20">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] mb-4" style={{ color: BRAND.accent }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] mb-4" style={{ color: BRAND.accentOnDark }}>
             Why Choose Us
           </p>
           <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-5">
@@ -1212,73 +1030,12 @@ function AdvantageSection() {
               style={{ background: 'rgba(255,255,255,0.04)' }}
             >
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110" style={{ background: `${BRAND.accent}25` }}>
-                <span style={{ color: BRAND.accent }}>{a.icon}</span>
+                <span style={{ color: BRAND.accentOnDark }}>{a.icon}</span>
               </div>
               <h3 className="text-white font-bold text-base mb-3 font-display">{a.title}</h3>
               <p className="text-white/45 text-sm leading-relaxed">{a.desc}</p>
             </div>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ════════════════════════════════════════════════════════
-   TESTIMONIALS
-   ════════════════════════════════════════════════════════ */
-function TestimonialsSection({ idx, setIdx }) {
-  const testimonials = [
-    { name: 'Sarah L.', role: 'Caregiver', text: "Zumanely has been a game-changer for me as a caregiver. The emotional support and expert guidance helped me navigate my loved one's health journey with confidence.", rating: 5 },
-    { name: 'David R.', role: 'Entrepreneur', text: "Being self-employed, I struggled to find reliable healthcare resources. Zumanely made it easy to access expert medical advice, fitness coaching, and mental health support — all in one place.", rating: 5 },
-    { name: 'Mark T.', role: 'Job Seeker', text: "Losing my job was stressful enough. Zumanely connected me with the right professionals and support services, making the process smooth and stress-free.", rating: 5 },
-  ];
-
-  const next = () => setIdx((idx + 1) % testimonials.length);
-  const prev = () => setIdx((idx - 1 + testimonials.length) % testimonials.length);
-
-  return (
-    <section className="py-28 px-6 lg:px-8" style={{ background: BRAND.warmLight }}>
-      <div className="max-w-3xl mx-auto text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] mb-4" style={{ color: BRAND.accent }}>
-          Testimonials
-        </p>
-        <h2 className="text-3xl md:text-4xl font-display font-bold mb-16" style={{ color: BRAND.primary }}>
-          Real Stories, Real Impact
-        </h2>
-
-        <div className="bg-white rounded-3xl p-10 lg:p-12 shadow-lg border border-gray-100/50">
-          <div className="flex justify-center gap-1 mb-8">
-            {Array.from({ length: testimonials[idx].rating }).map((_, i) => (
-              <Star key={i} size={18} className="fill-yellow-400 text-yellow-400" />
-            ))}
-          </div>
-          <blockquote className="text-lg text-gray-600 leading-relaxed mb-8 italic max-w-xl mx-auto">
-            "{testimonials[idx].text}"
-          </blockquote>
-          <p className="font-bold font-display text-lg" style={{ color: BRAND.primary }}>{testimonials[idx].name}</p>
-          <p className="text-sm text-gray-400 mt-1">{testimonials[idx].role}</p>
-        </div>
-
-        <div className="flex justify-center items-center gap-4 mt-10">
-          <button onClick={prev} className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:shadow-lg transition-all" style={{ color: BRAND.primary }}>
-            <ChevronLeft size={18} />
-          </button>
-          <div className="flex items-center gap-2">
-            {testimonials.map((_, i) => (
-              <span
-                key={i}
-                className="h-2 rounded-full transition-all duration-500"
-                style={{
-                  width: i === idx ? '28px' : '8px',
-                  background: i === idx ? BRAND.accent : '#CBD5E1',
-                }}
-              />
-            ))}
-          </div>
-          <button onClick={next} className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:shadow-lg transition-all" style={{ color: BRAND.primary }}>
-            <ChevronRight size={18} />
-          </button>
         </div>
       </div>
     </section>
@@ -1348,15 +1105,15 @@ function Footer() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-14 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-white text-center md:text-left">
             <h3 className="text-2xl font-display font-bold mb-2">Compassionate Care, Anytime, Anywhere</h3>
-            <p className="text-white/45 text-sm">Get holistic home health care tailored to your needs.</p>
+            <p className="text-white/75 text-sm">Get holistic home health care tailored to your needs.</p>
           </div>
-          <a
-            href="#ai-chat"
+          <Link
+            to="/contact"
             className="px-8 py-4 rounded-full text-sm font-semibold shadow-xl transition-all whitespace-nowrap hover:-translate-y-0.5"
-            style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)`, color: 'white' }}
+            style={{ background: `linear-gradient(135deg, ${BRAND.accent}, ${BRAND.primary})`, color: 'white' }}
           >
             Free Consultation
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -1364,11 +1121,11 @@ function Footer() {
         <div>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: `${BRAND.accent}25` }}>
-              <Heart size={18} style={{ color: BRAND.accent }} />
+              <Heart size={18} style={{ color: BRAND.accentOnDark }} />
             </div>
             <span className="text-white text-lg font-display font-bold">Zumanely</span>
           </div>
-          <p className="text-white/40 text-sm leading-relaxed">
+          <p className="text-white/75 text-sm leading-relaxed">
             Compassionate Care, Tailored Support, Powered by AI
           </p>
         </div>
@@ -1376,8 +1133,8 @@ function Footer() {
         <div>
           <h4 className="text-white font-semibold text-sm mb-6">Quick Links</h4>
           <div className="space-y-3.5 text-sm">
-            {['Home', 'About', 'Services', 'Contact'].map((l) => (
-              <a key={l} href="#" className="block text-white/40 hover:text-white/80 transition-colors">{l}</a>
+            {[['Home', '/'], ['About', '#about'], ['Services', '#services'], ['Contact', '#contact']].map(([l, href]) => (
+              <a key={l} href={href} className="block text-white/75 hover:text-white transition-colors">{l}</a>
             ))}
           </div>
         </div>
@@ -1386,14 +1143,14 @@ function Footer() {
           <h4 className="text-white font-semibold text-sm mb-6">Services</h4>
           <div className="space-y-3.5 text-sm">
             {['Complex Care', 'Stress Management', 'Personal Health', 'Visitor Care'].map((l) => (
-              <a key={l} href="#" className="block text-white/40 hover:text-white/80 transition-colors">{l}</a>
+              <a key={l} href="#services" className="block text-white/75 hover:text-white transition-colors">{l}</a>
             ))}
           </div>
         </div>
 
         <div>
           <h4 className="text-white font-semibold text-sm mb-6">Contact</h4>
-          <div className="space-y-3.5 text-sm text-white/40">
+          <div className="space-y-3.5 text-sm text-white/75">
             <a href="tel:4089826644" className="flex items-center gap-2.5 hover:text-white/80 transition-colors">
               <Phone size={13} /> (408) 982-6644
             </a>

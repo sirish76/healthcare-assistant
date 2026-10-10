@@ -326,6 +326,7 @@ export default function ProfilePage({ onBack }) {
                   Insurance Carrier
                 </label>
                 <select
+                  aria-label="Insurance carrier"
                   value={insurancePlan.carrier}
                   onChange={(e) => { setInsurancePlan(prev => ({ ...prev, carrier: e.target.value, planName: '' })); setInsuranceSaved(false); }}
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-100 transition-all appearance-none"

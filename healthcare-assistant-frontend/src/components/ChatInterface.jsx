@@ -1,29 +1,30 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Loader2, Sparkles, Stethoscope, FileText, DollarSign, Users } from 'lucide-react';
+import { Send, Loader2, Sparkles, Stethoscope, FileText, DollarSign, Users, Scale } from 'lucide-react';
 import MessageBubble from './MessageBubble';
 import DoctorResults from './DoctorResults';
 import { sendMessage } from '../services/api';
 
+// Starter questions for people who just lost (or are about to lose) job-based coverage.
 const SUGGESTED_QUESTIONS = [
   {
-    icon: <Stethoscope size={18} />,
-    label: 'Find a Doctor',
-    message: 'I need to find a primary care doctor in my area that accepts Medicare.',
-  },
-  {
-    icon: <FileText size={18} />,
-    label: 'Medicare Explained',
-    message: 'Can you explain the difference between Medicare Part A, B, C, and D?',
+    icon: <Scale size={18} />,
+    label: 'COBRA or a Marketplace plan?',
+    message: "I'm losing my job-based health insurance. How do I decide between COBRA and a Marketplace plan?",
   },
   {
     icon: <DollarSign size={18} />,
-    label: 'Insurance Costs',
-    message: "What's the difference between a deductible, copay, and coinsurance?",
+    label: 'What counts as income?',
+    message: 'After a job loss, what counts as income for Marketplace subsidies? Do severance and unemployment count?',
   },
   {
     icon: <Users size={18} />,
-    label: 'Medicaid Eligibility',
-    message: 'How do I know if I qualify for Medicaid in my state?',
+    label: 'Can my kids get CHIP?',
+    message: 'I just lost my job. Could my children qualify for Medicaid or CHIP?',
+  },
+  {
+    icon: <Stethoscope size={18} />,
+    label: 'Find a doctor',
+    message: 'I need to find a primary care doctor in my area.',
   },
 ];
 
@@ -42,7 +43,7 @@ const getLocalInsurancePlan = () => {
   return null;
 };
 
-function ChatInterface({ conversation, onUpdateMessages }) {
+function ChatInterface({ conversation, onUpdateMessages, compact = false }) {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState(null);
@@ -150,16 +151,16 @@ function ChatInterface({ conversation, onUpdateMessages }) {
   const isNewConversation = messages.length === 0;
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100 shadow-sm">
+    <div className="flex flex-col h-full min-h-0">
+      {/* Header (the drawer supplies its own in compact mode) */}
+      {!compact && <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100 shadow-sm">
         <div className="flex items-center gap-3 pl-10 lg:pl-0">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center">
             <Sparkles size={16} className="text-white" />
           </div>
           <div>
-            <h2 className="font-semibold text-gray-800">HealthAssist AI</h2>
-            <p className="text-xs text-gray-500">Healthcare & Insurance Assistant</p>
+            <h1 className="font-semibold text-gray-800">Zume</h1>
+            <p className="text-xs text-gray-600">AI assistant for coverage questions</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -168,15 +169,18 @@ function ChatInterface({ conversation, onUpdateMessages }) {
             Online
           </span>
         </div>
-      </header>
+      </header>}
 
       {/* Messages Area */}
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto px-4 md:px-6 lg:px-8 py-6"
+        className={`flex-1 overflow-y-auto ${compact ? 'px-4 py-4' : 'px-4 md:px-6 lg:px-8 py-6'}`}
+        role="log"
+        aria-live="polite"
+        aria-label="Conversation"
       >
-        {isNewConversation ? (
-          <WelcomeScreen onSuggestionClick={(msg) => handleSend(msg)} />
+        {isNewConversation && !conversation.initialPrompt ? (
+          <WelcomeScreen compact={compact} onSuggestionClick={(msg) => handleSend(msg)} />
         ) : (
           <div className="max-w-3xl mx-auto space-y-1">
             {messages.map((message) => (
@@ -194,24 +198,26 @@ function ChatInterface({ conversation, onUpdateMessages }) {
       </div>
 
       {/* Input Area */}
-      <div className="px-4 md:px-6 lg:px-8 py-4 bg-white border-t border-gray-100">
+      <div className={`${compact ? 'px-3 py-3' : 'px-4 md:px-6 lg:px-8 py-4'} bg-white border-t border-gray-100`}>
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-end gap-3 bg-gray-50 rounded-2xl border border-gray-200 focus-within:border-indigo-300 focus-within:ring-2 focus-within:ring-indigo-100 transition-all p-2">
+          <div className="flex items-end gap-3 bg-gray-50 rounded-2xl border border-gray-200 focus-within:border-indigo-600 focus-within:ring-2 focus-within:ring-indigo-600/30 transition-all p-2">
             <textarea
               ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about Medicare, Medicaid, insurance plans, or finding a doctor..."
+              placeholder="Type your question"
+              aria-label="Your question"
               rows={1}
-              className="flex-1 bg-transparent resize-none outline-none text-gray-700 placeholder:text-gray-400 text-sm px-3 py-2 max-h-32"
+              className="flex-1 bg-transparent resize-none outline-none focus-visible:outline-none text-gray-700 placeholder:text-gray-500 text-base px-3 py-2 max-h-32"
               style={{ minHeight: '40px' }}
               disabled={isLoading}
             />
             <button
               onClick={() => handleSend()}
               disabled={!inputValue.trim() || isLoading}
-              className="shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-white hover:from-indigo-700 hover:to-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
+              aria-label="Send message"
+              className="shrink-0 w-11 h-11 flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-white hover:from-indigo-700 hover:to-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
             >
               {isLoading ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -220,8 +226,8 @@ function ChatInterface({ conversation, onUpdateMessages }) {
               )}
             </button>
           </div>
-          <p className="text-center text-xs text-gray-400 mt-2">
-            HealthAssist AI provides general information only. Always consult your insurance provider or healthcare professional.
+          <p className="text-center text-xs text-gray-600 mt-2">
+            Zume is an AI assistant and can make mistakes. General information only, not advice. Confirm with your plan or the official site.
           </p>
         </div>
       </div>
@@ -229,7 +235,7 @@ function ChatInterface({ conversation, onUpdateMessages }) {
   );
 }
 
-function WelcomeScreen({ onSuggestionClick }) {
+function WelcomeScreen({ onSuggestionClick, compact }) {
   const insurancePlan = getLocalInsurancePlan();
 
   const dynamicSuggestions = [
@@ -249,24 +255,26 @@ function WelcomeScreen({ onSuggestionClick }) {
   const suggestions = dynamicSuggestions.slice(0, 4);
 
   return (
-    <div className="max-w-2xl mx-auto flex flex-col items-center justify-center h-full text-center px-4">
-      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-teal-500 flex items-center justify-center shadow-xl mb-6">
-        <Sparkles size={36} className="text-white" />
-      </div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-2">
-        Welcome to HealthAssist AI
+    <div className="max-w-2xl mx-auto flex flex-col items-center justify-center h-full text-center px-2">
+      {!compact && (
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-teal-500 flex items-center justify-center shadow-xl mb-6">
+          <Sparkles size={30} className="text-white" aria-hidden="true" />
+        </div>
+      )}
+      <h2 className={`${compact ? 'text-lg' : 'text-2xl'} font-bold text-gray-800 mb-2`}>
+        Questions about coverage after a job loss?
       </h2>
-      <p className="text-gray-500 mb-8 max-w-md">
-        Your AI-powered guide for healthcare insurance questions. Ask about Medicare,
-        Medicaid, insurance plans, or find doctors near you.
+      <p className={`text-gray-600 ${compact ? 'mb-5 text-sm' : 'mb-8'} max-w-md`}>
+        Ask in plain words about COBRA, Marketplace plans, Medicaid, or finding a doctor.
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
+      <div className={`grid grid-cols-1 ${compact ? '' : 'sm:grid-cols-2'} gap-3 w-full max-w-lg`}>
         {suggestions.map((suggestion, index) => (
           <button
             key={index}
+            type="button"
             onClick={() => onSuggestionClick(suggestion.message)}
-            className="group flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white border border-gray-200 hover:border-indigo-300 hover:shadow-md hover:bg-indigo-50/30 transition-all duration-200 text-left"
+            className="group flex items-center gap-3 min-h-[48px] px-4 py-3 rounded-xl bg-white border border-gray-200 hover:border-indigo-300 hover:shadow-md hover:bg-indigo-50/30 transition-all duration-200 text-left"
           >
             <div className="w-9 h-9 rounded-lg bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0 transition-colors">
               {suggestion.icon}

@@ -80,13 +80,13 @@ export default function TransitionFlow({ onBack, onAskAboutResults }) {
 
   return (
     <div className="min-h-screen" style={{ background: BRAND.bg }}>
-      <header className="px-6 pt-8 pb-10" style={{ background: `linear-gradient(135deg, ${BRAND.primary}, #24507A)` }}>
+      <div className="px-4 sm:px-6 pt-8 pb-10" style={{ background: `linear-gradient(135deg, ${BRAND.primary}, #24507A)` }}>
         <div className="max-w-5xl mx-auto">
           <button type="button" onClick={onBack} className="inline-flex items-center gap-1.5 text-sm font-medium mb-6"
                   style={{ color: 'rgba(255,255,255,0.8)' }}>
             <ArrowLeft size={16} /> Back to home
           </button>
-          <h1 className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          <h1 className="text-3xl md:text-4xl font-bold text-white">
             Lost your job? Compare your coverage options.
           </h1>
           <p className="mt-3 text-base max-w-2xl" style={{ color: 'rgba(255,255,255,0.8)' }}>
@@ -96,9 +96,9 @@ export default function TransitionFlow({ onBack, onAskAboutResults }) {
             <ShieldCheck size={14} style={{ color: BRAND.accent }} /> No account needed. Your answers stay in this browser tab and aren't saved.
           </p>
         </div>
-      </header>
+      </div>
 
-      <main className="px-6 -mt-6 pb-16">
+      <div className="px-4 sm:px-6 -mt-6 pb-16">
         <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-100 p-6 md:p-10">
           {result ? (
             <TransitionResults
@@ -146,7 +146,7 @@ export default function TransitionFlow({ onBack, onAskAboutResults }) {
                   </div>
                   <button type="submit" disabled={submitting}
                           className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-semibold text-white shadow-lg disabled:opacity-60"
-                          style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)` }}>
+                          style={{ background: BRAND.accent }}>
                     {submitting && <Loader2 size={16} className="animate-spin" />}
                     {step < STEPS.length - 1 ? 'Continue' : 'Compare my options'}
                     {!submitting && <ArrowRight size={16} />}
@@ -156,7 +156,7 @@ export default function TransitionFlow({ onBack, onAskAboutResults }) {
             </>
           )}
         </div>
-      </main>
+      </div>
     </div>
   );
 }

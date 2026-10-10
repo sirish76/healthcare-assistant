@@ -44,11 +44,11 @@ describe('TransitionResults', () => {
   it('shows the comparison, deadlines and hands only the summary to the chat', () => {
     const ask = vi.fn();
     render(<TransitionResults result={RESULT} onEdit={() => {}} onClear={() => {}} onAskAboutResults={ask} />);
-    expect(screen.getByText('COBRA (keep your old plan)')).toBeTruthy();
-    expect(screen.getByText('$2,650')).toBeTruthy();
-    expect(screen.getByText(/Carries over/)).toBeTruthy();
+    expect(screen.getAllByText('COBRA (keep your old plan)').length).toBe(2); // phone cards + table
+    expect(screen.getAllByText('$2,650').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Carries over/).length).toBeGreaterThan(0);
     expect(screen.getByText('50 days left')).toBeTruthy();
-    expect(screen.getByText(/\$287\/mo/)).toBeTruthy();
+    expect(screen.getAllByText(/\$287\/mo/).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole('button', { name: /Ask about my results/ }));
     expect(ask).toHaveBeenCalledWith('SUMMARY-ONLY-NUMBERS');
   });

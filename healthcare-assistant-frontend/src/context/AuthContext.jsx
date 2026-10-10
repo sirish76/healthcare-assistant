@@ -4,6 +4,28 @@ const AuthContext = createContext(null);
 
 const GOOGLE_CLIENT_ID = '1045121225058-evthv0bogs2i0k5l015a04eoig1ltsnp.apps.googleusercontent.com';
 
+let gsiPromise = null;
+
+/** Injects the Google Identity Services script once, on demand. */
+function loadGoogleIdentity() {
+  if (window.google?.accounts?.id) return Promise.resolve();
+  if (!gsiPromise) {
+    gsiPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => {
+        gsiPromise = null;
+        script.remove();
+        reject(new Error('Could not load Google sign-in'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+  return gsiPromise;
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,20 +43,10 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  // Initialize Google Identity Services
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
-
-  const signIn = useCallback(() => {
+  const signIn = useCallback(async () => {
+    // Google Identity Services is loaded only when someone chooses to sign in,
+    // so no third-party script runs on pages with forms (e.g. the coverage comparison).
+    await loadGoogleIdentity();
     return new Promise((resolve, reject) => {
       if (!window.google) {
         reject(new Error('Google Identity Services not loaded'));

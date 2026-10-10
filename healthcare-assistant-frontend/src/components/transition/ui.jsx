@@ -1,18 +1,10 @@
 import React from 'react';
 
-export const BRAND = {
-  primary: '#1B3A5C',
-  accent: '#2AA89A',
-  accentLight: '#E6F7F5',
-  warm: '#F9A826',
-  warmLight: '#FFF8EB',
-  bg: '#FAFBFD',
-  text: '#1E293B',
-  muted: '#64748B',
-};
+export { BRAND } from '../../theme';
+import { BRAND } from '../../theme';
 
 export const inputClass =
-  'w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-100 transition-all';
+  'w-full min-h-[48px] px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-base focus:outline-none focus:border-teal-700 focus:ring-2 focus:ring-teal-600/40 transition-all';
 
 export function Field({ label, hint, error, htmlFor, children }) {
   return (
@@ -49,13 +41,13 @@ export function MoneyInput({ id, value, onChange, placeholder = '0', ...rest }) 
 
 export function Toggle({ checked, onChange, label, id }) {
   return (
-    <label htmlFor={id} className="flex items-center gap-2.5 text-sm cursor-pointer select-none" style={{ color: BRAND.text }}>
+    <label htmlFor={id} className="flex items-center gap-2.5 min-h-[44px] text-sm cursor-pointer select-none" style={{ color: BRAND.text }}>
       <input
         id={id}
         type="checkbox"
         checked={!!checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="w-4 h-4 rounded accent-teal-600"
+        className="w-5 h-5 rounded accent-teal-700"
       />
       {label}
     </label>
@@ -74,7 +66,7 @@ export function Choice({ options, value, onChange, name }) {
             role="radio"
             aria-checked={active}
             onClick={() => onChange(o.value)}
-            className="px-4 py-2 rounded-xl text-sm font-medium border transition-all text-left"
+            className="min-h-[44px] px-4 py-2 rounded-xl text-sm font-medium border transition-all text-left"
             style={
               active
                 ? { background: BRAND.accentLight, borderColor: BRAND.accent, color: BRAND.primary }
@@ -93,7 +85,7 @@ export function Choice({ options, value, onChange, name }) {
 export function SectionTitle({ children, sub }) {
   return (
     <div className="mb-5">
-      <h2 className="text-xl font-bold" style={{ color: BRAND.primary, fontFamily: "'Playfair Display', Georgia, serif" }}>
+      <h2 className="text-xl font-bold" style={{ color: BRAND.primary }}>
         {children}
       </h2>
       {sub && <p className="text-sm mt-1" style={{ color: BRAND.muted }}>{sub}</p>}

@@ -40,7 +40,37 @@ function SubsidyBox({ subsidy }) {
   );
 }
 
-export default function OptionsComparison({ result }) {
+function OptionDetails({ o }) {
+  return (
+    <>
+      {o.availabilityReason && <p className="mb-1.5">{o.availabilityReason}</p>}
+      {o.costBasis && <p className="mb-1.5 italic">{o.costBasis}</p>}
+      <ul className="list-disc pl-4 space-y-1">
+        {o.notes.map((n) => <li key={n}>{n}</li>)}
+      </ul>
+      {o.type === 'MARKETPLACE' && <SubsidyBox subsidy={o.subsidy} />}
+      {o.type === 'MEDICAID_CHIP' && o.members?.length > 0 && (
+        <ul className="mt-2 space-y-1">
+          {o.members.map((m) => (
+            <li key={m.memberIndex}>
+              {m.group === 'CHILD' ? 'Child' : m.group === 'MEDICARE_AGE' ? 'Adult 65+' : 'Adult'}, age {m.age}:{' '}
+              <span style={{ color: AVAILABILITY[m.availability]?.fg }}>{AVAILABILITY[m.availability]?.label}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {o.handoff && (
+        <a href={o.handoff.url} target="_blank" rel="noopener noreferrer"
+           className="mt-2 inline-flex items-center gap-1 font-semibold" style={{ color: BRAND.accent }}>
+          {o.type === 'MEDICAID_CHIP' ? 'Apply' : 'See plans'} on {o.handoff.name} <ExternalLink size={12} />
+        </a>
+      )}
+    </>
+  );
+}
+
+export default function OptionsComparison({ result, title = 'Compare your options', headingLevel = 2, idPrefix = '' }) {
+  const H = `h${headingLevel}`;
   const [showPlans, setShowPlans] = useState(false);
   const { options, household } = result;
   const period = `${monthName(household.newCoverageStart)}–Dec ${household.newCoverageStart.slice(0, 4)}`;
@@ -60,17 +90,41 @@ export default function OptionsComparison({ result }) {
   ];
 
   return (
-    <section aria-labelledby="options-heading">
-      <h2 id="options-heading" className="text-lg font-bold mb-1" style={{ color: BRAND.primary }}>Compare your options</h2>
+    <section aria-labelledby={`${idPrefix}options-heading`}>
+      <H id={`${idPrefix}options-heading`} className="text-lg font-bold mb-1" style={{ color: BRAND.primary }}>{title}</H>
       <p className="text-sm mb-4" style={{ color: BRAND.muted }}>
         Household income is about {pct(household.annualFplPercent)} of the federal poverty level. Costs are estimates for {period}.
       </p>
 
-      <div className="overflow-x-auto -mx-1 px-1">
+      {/* Phones: one card per option */}
+      <ul className="md:hidden space-y-4">
+        {options.map((o) => (
+          <li key={o.type} className="rounded-2xl border border-gray-200 bg-white p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="font-semibold" style={{ color: BRAND.primary }}>{o.label}</span>
+              <Badge availability={o.availability} />
+            </div>
+            <dl className="mt-3 divide-y divide-gray-100 text-sm">
+              {rows.map((r) => (
+                <div key={r.label} className="flex justify-between gap-4 py-2">
+                  <dt style={{ color: BRAND.muted }}>{r.label}</dt>
+                  <dd className="text-right" style={{ color: BRAND.text }}>{r.render(o)}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="mt-3 text-xs leading-relaxed" style={{ color: BRAND.muted }}>
+              <OptionDetails o={o} />
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {/* Wider screens: side-by-side table */}
+      <div className="hidden md:block overflow-x-auto -mx-1 px-1">
         <table className="w-full min-w-[640px] text-sm border-separate border-spacing-0">
           <thead>
             <tr>
-              <th className="w-44" />
+              <td className="w-44" />
               {options.map((o) => (
                 <th key={o.type} scope="col" className="text-left align-top p-3 bg-white border-b border-gray-100">
                   <div className="font-semibold mb-1.5" style={{ color: BRAND.primary }}>{o.label}</div>
@@ -97,28 +151,7 @@ export default function OptionsComparison({ result }) {
               <th scope="row" className="text-left font-medium p-3 align-top" style={{ color: BRAND.muted }}>Details</th>
               {options.map((o) => (
                 <td key={o.type} className="p-3 align-top text-xs leading-relaxed" style={{ color: BRAND.muted }}>
-                  {o.availabilityReason && <p className="mb-1.5">{o.availabilityReason}</p>}
-                  {o.costBasis && <p className="mb-1.5 italic">{o.costBasis}</p>}
-                  <ul className="list-disc pl-4 space-y-1">
-                    {o.notes.map((n) => <li key={n}>{n}</li>)}
-                  </ul>
-                  {o.type === 'MARKETPLACE' && <SubsidyBox subsidy={o.subsidy} />}
-                  {o.type === 'MEDICAID_CHIP' && o.members?.length > 0 && (
-                    <ul className="mt-2 space-y-1">
-                      {o.members.map((m) => (
-                        <li key={m.memberIndex}>
-                          {m.group === 'CHILD' ? 'Child' : m.group === 'MEDICARE_AGE' ? 'Adult 65+' : 'Adult'}, age {m.age}:{' '}
-                          <span style={{ color: AVAILABILITY[m.availability]?.fg }}>{AVAILABILITY[m.availability]?.label}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {o.handoff && (
-                    <a href={o.handoff.url} target="_blank" rel="noopener noreferrer"
-                       className="mt-2 inline-flex items-center gap-1 font-semibold" style={{ color: BRAND.accent }}>
-                      {o.type === 'MEDICAID_CHIP' ? 'Apply' : 'See plans'} on {o.handoff.name} <ExternalLink size={12} />
-                    </a>
-                  )}
+                  <OptionDetails o={o} />
                 </td>
               ))}
             </tr>

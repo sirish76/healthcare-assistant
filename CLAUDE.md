@@ -28,7 +28,7 @@ mvn package -DskipTests                     # what the Dockerfile runs
 # Frontend dev server on :3000; proxies /api to localhost:8080 (vite.config.js)
 cd healthcare-assistant-frontend && npm install && npm run dev
 npm run build
-npm test                                    # Vitest (jsdom); single file: npx vitest run src/components/transition/wizardState.test.js
+npm test                                    # Vitest (jsdom), incl. axe-core accessibility checks; single file: npx vitest run src/router.test.jsx
 
 # Backend tests (no DB needed); single class: mvn test -Dtest=DeadlineCalculatorTest
 cd healthcare-assistant-backend && mvn test
@@ -40,7 +40,14 @@ Secrets are read from the root `.env` by docker compose: `ANTHROPIC_API_KEY`, `Z
 
 **Request path.** The browser talks to nginx in the frontend container. nginx serves the SPA and proxies `/api/*` to `backend:8080`. In dev, Vite does the same proxying. `src/services/api.js` wraps every backend call.
 
-**Frontend.** There is no router. `App.jsx` holds a `view` state (`landing` / chat / contact / profile) and swaps top-level components based on it. It also tracks `sessionType` (`free-20` or `paid-60`) and the conversation list. `AuthContext` handles Google Sign-In.
+**Frontend.**
+- **Routing:** URL paths, through a ~60-line History-API router in `src/router.jsx` (`navigate`, `useLocation`, `Link`). There's no routing library. nginx's `try_files` fallback makes deep links work.
+- **Routes:** `/` (home, aimed at people who just lost their job), `/compare` (the coverage wizard), `/chat`, `/more` (the former landing content), `/contact` (`?type=paid-60` for paid sessions) and `/profile`.
+  - Stripe returns to `/?payment=success&session_id=…` or `/?payment=cancelled`, and `HomePage` shows a banner for each. Don't change those URLs without updating `STRIPE_SUCCESS_URL` and `STRIPE_CANCEL_URL`.
+  - `legacyRedirect` maps `/transition` and the old `/#about`, `/#services` and `/#contact` anchors to their new locations.
+- **Layout:** every page except `/chat` gets `SiteHeader`, `SiteFooter`, a floating `ChatLauncher` (tablet and desktop; on phones the chat button is in the header) and `ChatDrawer`, which renders `ChatInterface compact`. All pages except home are lazy-loaded.
+- **Theme:** colour tokens are in `src/theme.js`. Use `BRAND.accent` (#17766C) for teal text and buttons; `#2AA89A` is too light for text on white.
+- **Auth:** `AuthContext` handles Google Sign-In, and its script loads only when someone clicks "Sign in".
 
 **Chat flow** (the core feature):
 1. `ChatController` passes the request to `ChatService.processMessage`, which calls `AnthropicService.chat`.
@@ -61,7 +68,7 @@ Secrets are read from the root `.env` by docker compose: `ANTHROPIC_API_KEY`, `Z
 
 ## Coverage transition feature ("Lost your job? Compare your coverage options")
 
-- **Backend:** `com.healthassist.transition`. **Frontend:** `components/transition/`, `view: 'transition'` in `App.jsx`.
+- **Backend:** `com.healthassist.transition`. **Frontend:** `components/transition/`, at route `/compare`.
 - **Rules engine:** `engine/` is pure Java with no I/O, logging or clock. It computes every number and eligibility decision. The chatbot only receives `chatSummary` and explains it.
 - **Regulatory values:** stored in `src/main/resources/transition/regulatory/` (`common.yaml` plus `plan-year-YYYY.yaml`).
   - Every value carries `effectiveDate`, `sourceUrl`, `verified` and an optional `todo`. Shared source metadata uses YAML anchors and merge keys, and top-level `_` keys are dropped.
@@ -75,7 +82,7 @@ Secrets are read from the root `.env` by docker compose: `ANTHROPIC_API_KEY`, `Z
   - `TransitionExceptionHandler` never echoes rejected values.
   - Endpoints are POST only, and responses are `no-store`.
   - The frontend keeps the wizard in sessionStorage only.
-  - "Ask about my results" opens an `ephemeral-` conversation that `App.jsx` never sends to `/api/conversations`.
+  - "Ask about my results" opens the chat drawer in place with an `ephemeral-` conversation that `App.jsx` never sends to `/api/conversations`.
   - `TransitionControllerPrivacyTest` guards this; keep it passing.
 
 ## Repo quirks

@@ -26,7 +26,7 @@ export default function TransitionResults({ result, onEdit, onClear, onAskAboutR
       <div className="flex flex-wrap gap-3">
         <button type="button" onClick={() => onAskAboutResults(result.chatSummary)}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all"
-                style={{ background: `linear-gradient(135deg, ${BRAND.accent}, #1B8A7E)` }}>
+                style={{ background: BRAND.accent }}>
           <MessageSquare size={18} /> Ask about my results
         </button>
         <button type="button" onClick={onEdit}

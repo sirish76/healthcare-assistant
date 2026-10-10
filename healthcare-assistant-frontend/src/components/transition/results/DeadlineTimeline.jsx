@@ -3,17 +3,18 @@ import { BRAND } from '../ui';
 import { shortDate } from '../format';
 
 const STATUS = {
-  PASSED: { label: 'Passed', color: '#94A3B8' },
+  PASSED: { label: 'Passed', color: '#64748B' },
   OPEN: { label: 'Open now', color: '#11695F' },
   UPCOMING: { label: 'Upcoming', color: BRAND.primary },
   ONGOING: { label: 'Any time', color: '#11695F' },
-  UNKNOWN: { label: 'Not announced', color: '#94A3B8' },
+  UNKNOWN: { label: 'Not announced', color: '#64748B' },
 };
 
-export default function DeadlineTimeline({ timeline }) {
+export default function DeadlineTimeline({ timeline, title = 'Your deadlines', headingLevel = 2, idPrefix = '' }) {
+  const H = `h${headingLevel}`;
   return (
-    <section aria-labelledby="timeline-heading">
-      <h2 id="timeline-heading" className="text-lg font-bold mb-4" style={{ color: BRAND.primary }}>Your deadlines</h2>
+    <section aria-labelledby={`${idPrefix}timeline-heading`}>
+      <H id={`${idPrefix}timeline-heading`} className="text-lg font-bold mb-4" style={{ color: BRAND.primary }}>{title}</H>
       <ol className="relative border-l-2 border-gray-100 ml-2 space-y-5">
         {timeline.map((t) => {
           const s = STATUS[t.status] || STATUS.UNKNOWN;
@@ -23,7 +24,7 @@ export default function DeadlineTimeline({ timeline }) {
               <span className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full border-2 border-white"
                     style={{ background: urgent ? BRAND.warm : s.color }} aria-hidden="true" />
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="font-semibold text-sm" style={{ color: t.status === 'PASSED' ? '#94A3B8' : BRAND.text }}>
+                <span className="font-semibold text-sm" style={{ color: t.status === 'PASSED' ? '#64748B' : BRAND.text }}>
                   {t.label}
                 </span>
                 <span className="text-xs font-semibold" style={{ color: s.color }}>{s.label}</span>
