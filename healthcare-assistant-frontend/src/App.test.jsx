@@ -57,11 +57,12 @@ afterEach(() => {
 describe('home page', () => {
   it('leads with the coverage comparison and keeps chat secondary', () => {
     renderAt('/');
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/Lost your job/);
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/Between jobs\.\s*Not between coverage\./);
+    expect(screen.getAllByText(/fictional numbers/).length).toBeGreaterThan(0);
     const ctas = screen.getAllByRole('link', { name: /Compare my options/ });
     expect(ctas.length).toBeGreaterThan(1);
     ctas.forEach((a) => expect(a.getAttribute('href')).toBe('/compare'));
-    expect(screen.getAllByText(/The comparison doesn’t store your answers/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/doesn’t store your answers/).length).toBeGreaterThan(0);
     for (const id of ['deadlines', 'how-it-works', 'example', 'why', 'faq']) {
       expect(document.getElementById(id)).not.toBeNull();
     }

@@ -394,7 +394,7 @@ function AppContent() {
 }
 
 const PAGE_TITLES = {
-  '/': 'Zumanely: compare your health coverage options after a job loss',
+  '/': 'Lost your job? Keep your coverage. | Zumanely',
   '/compare': 'Compare your coverage options | Zumanely',
   '/transition': 'Compare your coverage options | Zumanely',
   '/chat': 'Ask Zume | Zumanely',

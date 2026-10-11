@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ArrowRight, CalendarClock, ClipboardList, Columns3, Landmark, Lock, MessageCircle, Scale, ShieldCheck } from 'lucide-react';
+import { ArrowRight, CalendarClock, ClipboardList, Columns3, Landmark, Lock, MessageCircle, Scale } from 'lucide-react';
 import { Link } from '../../router';
 import { BRAND, primaryButton } from '../../theme';
 import OptionsComparison from '../transition/results/OptionsComparison';
@@ -7,6 +7,7 @@ import DeadlineTimeline from '../transition/results/DeadlineTimeline';
 import { SAMPLE_RESULT } from './sampleResult';
 import PaymentBanner from './PaymentBanner';
 import StickyMobileCta from './StickyMobileCta';
+import HeroPreview from './HeroPreview';
 
 const DEADLINES = [
   {
@@ -84,16 +85,29 @@ export default function HomePage({ paymentStatus, onOpenChat, onStickyCtaChange 
 
       {/* 1. Hero */}
       <section aria-labelledby="hero-title" style={{ background: `linear-gradient(180deg, ${BRAND.accentLight} 0%, ${BRAND.bg} 100%)` }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-16 sm:pt-20 sm:pb-24">
-          <div className="max-w-3xl">
-            <h1 id="hero-title" className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1]" style={{ color: BRAND.primary }}>
-              Lost your job, or about to? See every health coverage option you have, in real dollars.
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 lg:py-32 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] lg:items-center">
+          <div className="hero-in">
+            <h1
+              id="hero-title"
+              style={{
+                color: BRAND.primary,
+                fontSize: 'clamp(1.875rem, 0.9rem + 3.4vw, 3.5rem)',
+                fontWeight: 600,
+                letterSpacing: '-0.015em',
+                lineHeight: 1.1,
+                maxWidth: '16ch',
+              }}
+            >
+              <span className="block whitespace-nowrap">Between jobs.</span>
+              <span className="block whitespace-nowrap">Not between coverage.</span>
             </h1>
-            <p className="mt-5 text-lg sm:text-xl leading-relaxed text-slate-700">
-              COBRA, Marketplace plans, Medicaid and a spouse’s plan, compared side by side, with your personal deadlines.
-              About 5 minutes.
+            <p
+              className="mt-6 text-slate-600"
+              style={{ fontSize: 'clamp(1.0625rem, 0.75rem + 1.2vw, 1.5rem)', lineHeight: 1.5, maxWidth: '40ch' }}
+            >
+              Compare COBRA, Marketplace, and Medicaid side by side, in real dollars, in about 5 minutes.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
+            <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
               <span ref={heroCtaRef}><Cta className="w-full sm:w-auto text-lg !min-h-[56px] !px-8" /></span>
               <button type="button" onClick={onOpenChat}
                       className="inline-flex items-center justify-center gap-2 min-h-[48px] px-4 rounded-full font-semibold underline-offset-4 hover:underline"
@@ -101,11 +115,8 @@ export default function HomePage({ paymentStatus, onOpenChat, onStickyCtaChange 
                 <MessageCircle size={18} aria-hidden="true" /> Or ask a question
               </button>
             </div>
-            <p className="mt-6 flex items-start gap-2 text-sm text-slate-700">
-              <ShieldCheck size={18} className="shrink-0" style={{ color: BRAND.accent }} aria-hidden="true" />
-              Free. No signup. The comparison doesn’t store your answers.
-            </p>
           </div>
+          <HeroPreview />
         </div>
       </section>
 
