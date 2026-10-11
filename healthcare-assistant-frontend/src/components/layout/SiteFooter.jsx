@@ -29,10 +29,9 @@ export default function SiteFooter() {
         </nav>
         <div>
           <h2 className="font-semibold text-white mb-3">Contact</h2>
-          <p className="leading-loose">
-            zumanely0@gmail.com<br />
-            (408) 982-6644
-          </p>
+          <a href="mailto:zumanely0@gmail.com" className="inline-flex items-center min-h-[44px] underline-offset-4 hover:underline">
+            zumanely0@gmail.com
+          </a>
         </div>
       </div>
       <div className="border-t border-white/15">

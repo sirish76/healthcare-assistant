@@ -1151,9 +1151,6 @@ function Footer() {
         <div>
           <h4 className="text-white font-semibold text-sm mb-6">Contact</h4>
           <div className="space-y-3.5 text-sm text-white/75">
-            <a href="tel:4089826644" className="flex items-center gap-2.5 hover:text-white/80 transition-colors">
-              <Phone size={13} /> (408) 982-6644
-            </a>
             <a href="mailto:zumanely0@gmail.com" className="flex items-center gap-2.5 hover:text-white/80 transition-colors">
               <Mail size={13} /> zumanely0@gmail.com
             </a>

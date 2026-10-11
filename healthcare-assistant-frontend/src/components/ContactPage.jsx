@@ -220,7 +220,6 @@ export default function ContactPage({ onBack, onOpenChat, user, sessionType = 'f
               <h2 className="text-xl font-bold mb-6" style={{ color: BRAND.primary }}>Contact Information</h2>
               <div className="space-y-5">
                 {[
-                  { icon: <Phone size={18} />, label: 'Call Us', value: '(408) 982-6644', href: 'tel:4089826644' },
                   { icon: <Mail size={18} />, label: 'Email Us', value: 'zumanely0@gmail.com', href: 'mailto:zumanely0@gmail.com' },
                   { icon: <MapPin size={18} />, label: 'Visit Us', value: '41079 Bernie St, Fremont, CA 94539' },
                   { icon: <Clock size={18} />, label: 'Hours', value: 'Mon – Fri: 9 AM – 5 PM PST' },

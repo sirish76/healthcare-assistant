@@ -52,7 +52,7 @@ public class EmailService {
                         </div>
                         <p style="color: #64748B;">You'll receive a calendar invite shortly. If you need to reschedule, please contact us.</p>
                         <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 24px 0;">
-                        <p style="color: #94a3b8; font-size: 13px;">Zumanely | (408) 982-6644 | zumanely0@gmail.com</p>
+                        <p style="color: #94a3b8; font-size: 13px;">Zumanely | zumanely0@gmail.com</p>
                     </div>
                 </div>
                 """.formatted(clientName, dateTime, service != null ? service : "General Consultation");
@@ -93,7 +93,7 @@ public class EmailService {
                         </div>
                         <p style="color: #64748B;">Payment of $19.99 has been received. You'll receive a calendar invite shortly.</p>
                         <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 24px 0;">
-                        <p style="color: #94a3b8; font-size: 13px;">Zumanely | (408) 982-6644 | zumanely0@gmail.com</p>
+                        <p style="color: #94a3b8; font-size: 13px;">Zumanely | zumanely0@gmail.com</p>
                     </div>
                 </div>
                 """.formatted(clientName, dateTime, service != null ? service : "General Consultation");
