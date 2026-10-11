@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Heart, Menu, MessageCircle, X } from 'lucide-react';
+import { Menu, MessageCircle, X } from 'lucide-react';
 import { Link, useLocation } from '../../router';
 import { BRAND, primaryButton } from '../../theme';
 import UserMenu from './UserMenu';
+import Wordmark from './Wordmark';
 
 const LINKS = [
   { to: '/compare', label: 'Compare options' },
@@ -29,11 +30,8 @@ export default function SiteHeader({ onOpenChat }) {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-        <Link to="/" className="flex items-center gap-2.5 min-h-[44px] rounded-lg" aria-label="Zumanely home">
-          <span className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: BRAND.primary }}>
-            <Heart size={18} className="text-white" aria-hidden="true" />
-          </span>
-          <span className="text-xl font-bold tracking-tight" style={{ color: BRAND.primary }}>Zumanely</span>
+        <Link to="/" className="flex items-center min-h-[44px] rounded-lg" aria-label="Zumanely home">
+          <Wordmark className="h-10 w-auto" />
         </Link>
 
         <nav aria-label="Main" className="hidden lg:block">
